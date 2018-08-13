@@ -1,37 +1,11 @@
-Welcome to Glitch
+Readonly Ravelry API key demo
 =================
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
 
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+The Ravelry API allows you to create an API key with readonly access. After creating a key, you receive a username and password that can be used with HTTP Basic Authentication.
 
-Find out more [about Glitch](https://glitch.com/about).
+If you are not using a client library that supports Basic Authentication, you can do it yourself by adding an HTTP Header
 
-
-Your Project
-------------
-
-### ← README.md
-
-That's this file, where you can tell people what your cool website does and how you built it.
-
-### ← index.html
-
-Where you'll write the content of your website. 
-
-### ← style.css
-
-CSS files add styling rules to your content.
-
-### ← script.js
-
-If you're feeling fancy you can add interactivity to your site with JavaScript.
-
-### ← assets
-
-Drag in `assets`, like images or music, to add them to your project
-
-Made by [Fog Creek](https://fogcreek.com/)
--------------------
-
-\ ゜o゜)ノ
+* That name of the header is "Authorization"
+* The value of the header should be "Basic" + " " + btoa(username + ":" + password)
+* more information: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
