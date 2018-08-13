@@ -8,4 +8,7 @@ If you are not using a client library that supports Basic Authentication, you ca
 
 * That name of the header is "Authorization"
 * The value of the header should be "Basic" + " " + btoa(username + ":" + password)
-* more information: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+
+`btoa` is the Javascript function to base 64 encode a value. In other languages, you'll use whatever base 64 encoding utility or library is available to you.
+
+More information: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
