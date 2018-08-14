@@ -9,8 +9,6 @@ RavelryApi = function(base, authUsername, authPassword) {
 
 RavelryApi.prototype.get = function(url, callback) {
   const headers = new Headers();
-
-  
   // This is the HTTP header that you need to access api.ravelry.com with a read only API key
   headers.append('Authorization', 'Basic ' + btoa(this.authUsername + ":" + this.authPassword));
   
@@ -21,6 +19,13 @@ RavelryApi.prototype.projectsList = function(username) {
   const url = this.base + '/projects/' + username + '/list.json';
   return this.get(url);
 };
+
+
+
+
+
+
+// The above is all we need to get some JSON from the API!   The rest makes the example page do stuff:
 
 
 
