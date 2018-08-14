@@ -7,7 +7,16 @@ body {
 
 h1 {
   font-size: 1.3em;
+  line-height: 30px;
 }
+
+h1 img {
+  vertical-align: middle;
+  height: 30px;
+  width: 30px;
+  padding-right: 5px;
+}
+
 
 h2 {
   font-size: 1.3em;
@@ -24,7 +33,7 @@ hr {
 }
 
 .section {
-  margin: 0 2em;
+  margin: 2em 2em;
 }
 
 .project__results {
@@ -49,9 +58,8 @@ hr {
   max-width: 300px;
 }
 
-
-.pagination__link--next {
-  flex-grow: 1;
+.pagination__link--previous {
+  padding-right: 3em;
 }
 
 .pagination__link--next {
@@ -62,6 +70,8 @@ hr {
   width: 100%;
   height: 300px;
   margin-top: 3em;
+  font-family: monaco,Consolas,Lucida Console,monospace;
+  font-size: 15px;
 }
 
 @keyframes rotate {
