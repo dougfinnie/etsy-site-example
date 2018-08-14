@@ -13,13 +13,18 @@ h1 {
   to {transform: rotate(360deg);}
 }
 
+h2 {
+  font-size: 1.3em;
+}
+
 .loading:before {
   content: '';
   border: 2px solid #ccc;
   animation: rotate .6s linear infinite;
   border-top-color: black;
   border-radius: 1em;
-
+  vertical-align: middle;
+  margin-left: 1em;
   width: .75em;
   height: .75em;
   display: inline-block;

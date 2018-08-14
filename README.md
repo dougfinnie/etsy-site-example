@@ -2,7 +2,9 @@ Readonly Ravelry API key demo
 =================
 
 
-The Ravelry API allows you to create an API key with readonly access. After creating a key, you receive a username and password that can be used with HTTP Basic Authentication.
+The Ravelry API allows you to create an API key with readonly access. After creating a key, you'll receive a username and password that can be used with HTTP Basic Authentication:
+
+![app keys](https://skitch2.ravelrycache.com/Screen-Shot-2018-08-14-at-9.42.38-AM-1534254425.png)
 
 If you are not using a client library that supports Basic Authentication, you can do it yourself by adding an HTTP Header
 
@@ -11,7 +13,7 @@ If you are not using a client library that supports Basic Authentication, you ca
 
 `btoa` is the Javascript function to base 64 encode a value. In other languages, you'll use whatever base 64 encoding utility or library is available to you.
 
-More information: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+More information about the `Authorization` header: [https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
 
 
 ## Project Files

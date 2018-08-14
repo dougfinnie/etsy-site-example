@@ -35,14 +35,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // request a project list from the API and render it as a list of project names
   
   function renderProjects(username) {
+    document.getElementById('loading_indicator').style.display = 'inline-block';
+    
     ravelryApiClient.projectsList(username).then(function(response) {
       return response.json();
     }).then(function(json) {
+      document.getElementById('loading_indicator').style.display = 'none';
+      
       var rootElement = document.getElementById('projects-list-results');
-      rootElement.innerHTML = '<strong>' + json.projects.length + ' projects found</strong>';
+      rootElement.innerHTML = '<h2>' + json.projects.length + ' projects found</h2>';
       
       json.projects.forEach(function(project) {
-        var child = document.createElement('DIV');
+        var child = document.createElement('LI');
         child.innerText = project.name;
         rootElement.appendChild(child);
       });
