@@ -9,11 +9,18 @@ RavelryApi = function(base, authUsername, authPassword) {
 
 RavelryApi.prototype.get = function(url, callback) {
   const headers = new Headers();
-  // This is the HTTP header that you need to access api.ravelry.com with a read only API key
+  // This is the HTTP header that you need add in order to access api.ravelry.com with a read only API key
+  // `btoa` will base 64 encode a string: https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+  
   headers.append('Authorization', 'Basic ' + btoa(this.authUsername + ":" + this.authPassword));
   
-  return fetch(url, { method: 'GET', headers: headers });
+  return fetch(url, { method: 'GET', headers: headers }).then(function(response) {
+    return response.json();
+  });
 };
+
+// Retrieve a list of projects for a user: https://www.ravelry.com/api#projects_list
+// Pagination is optional, default is no pagination
 
 RavelryApi.prototype.projectsList = function(username) {
   const url = this.base + '/projects/' + username + '/list.json';
@@ -37,9 +44,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   function renderProjects(username) {
     document.getElementById('loading_indicator').style.display = 'inline-block';
     
-    ravelryApiClient.projectsList(username).then(function(response) {
-      return response.json();
-    }).then(function(json) {
+    ravelryApiClient.projectsList(username).then(function(json) {
       document.getElementById('loading_indicator').style.display = 'none';
       
       const rootElement = document.getElementById('projects-list-results');
@@ -57,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
 
         const title = document.createElement('a');
-        //title.href = project.links.self.href;
+        title.href = project.links.self.href;
         title.innerText = project.name;
         child.appendChild(title);
         
