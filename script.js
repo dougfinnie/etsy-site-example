@@ -25,29 +25,40 @@ RavelryApi.prototype.projectsList = function(username) {
 document.addEventListener("DOMContentLoaded", function(event) {
   let ravelryApiClient = null;
 
-  function renderProjects(json) {
-    ravelryApiClient.projectsList('frecklegirl').then(function(response) {
+  function renderProjects(username) {
+    ravelryApiClient.projectsList(username).then(function(response) {
       return response.json();
     }).then(function(json) {
       var rootElement = document.getElementById('projects-list-results');
-      rootElement.innerHTML = '';
+      rootElement.innerHTML = '<strong>' + json.projects.length + ' projects found</strong>';
       
       json.projects.forEach(function(project) {
         var child = document.createElement('DIV');
         child.innerText = project.name;
-        rootElement.appendChild(child)
+        rootElement.appendChild(child);
       });
     });  
   };
   
   const credentialsForm = document.getElementById('api-credentials-form');
+  const projectListForm = document.getElementById('projects-list-form');
+
   credentialsForm.onsubmit = function() {
-    const username = credentialsForm.querySelector("input[name='username_key']").value;
-    const password = credentialsForm.querySelector("input[name='password_key']").value;
+    const usernameKey = credentialsForm.querySelector("input[name='username_key']").value;
+    const passwordKey = credentialsForm.querySelector("input[name='password_key']").value;
     
-    ravelryApiClient = new RavelryApi('https://api.ravelry.com', username, password);
-    renderProjects();
+    ravelryApiClient = new RavelryApi('https://api.ravelry.com', usernameKey, passwordKey);
+    
+    document.getElementById('api-request').style.display = 'block';
+    projectListForm.onsubmit();
     
     return false;
   };
+
+  projectListForm.onsubmit = function() {
+    const username = projectListForm.querySelector("input[name='username']").value;
+    renderProjects(username);
+    return false;
+  };
+  
 });

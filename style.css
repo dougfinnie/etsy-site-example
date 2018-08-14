@@ -8,3 +8,19 @@ body {
 h1 {
   font-size: 1.4em;
 }
+
+@keyframes rotate {
+  to {transform: rotate(360deg);}
+}
+
+.spinner:before {
+  content: '';
+  border: 2px solid #ccc;
+  animation: rotate .6s linear infinite;
+
+  width: 1em;
+  height: 1em;
+
+  display: inline-block;
+  margin-left: 1em;
+}
