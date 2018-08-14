@@ -19,6 +19,7 @@ h2 {
 
 .project__results {
   list-style: none;
+  padding: 0;
 } 
 
 .project__result {
@@ -32,6 +33,21 @@ h2 {
   vertical-align: middle;
   padding-right: 1em;
 }
+
+.pagination {
+  display: flex;
+  max-width: 300px;
+}
+
+
+.pagination__link--next {
+  flex-grow: 1;
+}
+
+.pagination__link--next {
+  text-align: right;
+}
+
 
 .spinner:before {
   content: '';

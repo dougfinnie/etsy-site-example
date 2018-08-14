@@ -36,53 +36,27 @@ RavelryApi.prototype.projectsList = function(username, page) {
 // The above is all we need to get some JSON from the API!   The rest makes the example page do stuff:
 
 
+/* globals ApiDemo */
 
-document.addEventListener("DOMContentLoaded", function(event) {
-  let ravelryApiClient = null;
+ApiDemo = function() {
+  this.ravelryApiClient = null;
+  this.addEventListeners();
+};
 
-  // request a project list from the API and render it as a list of project names
-  
-  function renderProjects(username) {
-    document.getElementById('loading_indicator').style.display = 'inline-block';
-    
-    ravelryApiClient.projectsList(username).then(function(json) {
-      document.getElementById('loading_indicator').style.display = 'none';
-      
-      const rootElement = document.getElementById('projects-list-results');
-      rootElement.innerHTML = '<h2>' + json.paginator.results + ' projects found</h2>';
-      
-      const previousPageLink = document.getElementById('pagination-previous');
-      previousPageLink.style.display = json.paginator.page > 1 ? 'block' : 'none';
-
-      const nextPageLink = document.getElementById('pagination-next');
-      nextPageLink.style.display = json.paginator.page < json.paginator.last_page ? 'block' : 'none';
-      
-      json.projects.forEach(function(project) {
-        const child = document.createElement('li');
-        child.className = 'project__result';
-        
-        if (project.first_photo) {
-          const img = document.createElement('img');
-          img.src = project.first_photo.square_url;
-          img.className = 'project__result__thumbnail';
-          child.appendChild(img);
-        }
-
-        const title = document.createElement('a');
-        title.href = project.links.self.href;
-        title.innerText = project.name;
-        child.appendChild(title);
-        
-        rootElement.appendChild(child);
-      });
-    });  
-  };
-  
+ApiDemo.prototype.addEventListeners = function() {
   const credentialsForm = document.getElementById('api-credentials-form');
   const projectListForm = document.getElementById('projects-list-form');
-  
-  // create an API client whenever the credentials form is submitted
+  const previousLink = document.getElementById('pagination-previous');
+  const nextLink = document.getElementById('pagination-next');
+    
 
+  var submitProjectSearch = function() {
+    const username = projectListForm.querySelector("input[name='username']").value;
+    this.renderProjects(username, currentProjectPage);
+  }.bind(this);
+  
+
+  // create an API client whenever the credentials form is submitted
   credentialsForm.onsubmit = function() {
     const usernameKey = credentialsForm.querySelector("input[name='username_key']").value;
     const passwordKey = credentialsForm.querySelector("input[name='password_key']").value;
@@ -90,15 +64,75 @@ document.addEventListener("DOMContentLoaded", function(event) {
     ravelryApiClient = new RavelryApi('https://api.ravelry.com', usernameKey, passwordKey);
     
     document.getElementById('api-request').style.display = 'block';
-    projectListForm.onsubmit();
+    currentProjectPage = 1;
+    submitProjectSearch();
     
     return false;
   };
 
+    
   projectListForm.onsubmit = function() {
-    const username = projectListForm.querySelector("input[name='username']").value;
-    renderProjects(username);
+    submitProjectSearch();
     return false;
   };
+  
+  previousLink.addEventListener('click', function() {
+    currentProjectPage -= 1;
+    submitProjectSearch();
+  });
+
+  nextLink.addEventListener('click', function() {
+    currentProjectPage += 1;
+    submitProjectSearch();
+  });
+};
+
+
+ApiDemo.prototype.createApiClient = function(authUsername, authPassword) {
+  this.ravelryApiClient = new RavelryApi('https://api.ravelry.com', usernameKey, passwordKey);
+};
+
+ApiDemo.prototype.renderProjects = function(username, page) {
+  document.getElementById('loading_indicator').style.display = 'inline-block';
+
+  this.ravelryApiClient.projectsList(username, page).then(function(json) {
+    document.getElementById('loading_indicator').style.display = 'none';
+
+    const rootElement = document.getElementById('projects-list-results');
+    rootElement.innerHTML = '<h2>' + json.paginator.results + ' projects found</h2>' + 
+      '<p> page ' + json.paginator.page + ' of ' + json.paginator.last_page + '</p>';
+
+    const previousPageLink = document.getElementById('pagination-previous');
+    previousPageLink.style.display = json.paginator.page > 1 ? 'block' : 'none';
+
+    const nextPageLink = document.getElementById('pagination-next');
+    nextPageLink.style.display = json.paginator.page < json.paginator.last_page ? 'block' : 'none';
+
+    json.projects.forEach(function(project) {
+      const child = document.createElement('li');
+      child.className = 'project__result';
+
+      if (project.first_photo) {
+        const img = document.createElement('img');
+        img.src = project.first_photo.square_url;
+        img.className = 'project__result__thumbnail';
+        child.appendChild(img);
+      }
+
+      const title = document.createElement('a');
+      title.href = project.links.self.href;
+      title.innerText = project.name;
+      child.appendChild(title);
+
+      rootElement.appendChild(child);
+    });
+  });  
+};
+
+document.addEventListener("DOMContentLoaded", function(event) {
+  window.apiDemo = new ApiDemo();
+  let ravelryApiClient = null;
+  let currentProjectPage = 1;
+
   
 });
