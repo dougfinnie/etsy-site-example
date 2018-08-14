@@ -22,8 +22,9 @@ RavelryApi.prototype.get = function(url, callback) {
 // Retrieve a list of projects for a user: https://www.ravelry.com/api#projects_list
 // Pagination is optional, default is no pagination
 
-RavelryApi.prototype.projectsList = function(username) {
-  const url = this.base + '/projects/' + username + '/list.json';
+RavelryApi.prototype.projectsList = function(username, page) {
+  const pageSize = 25;
+  const url = this.base + '/projects/' + username + '/list.json?page=' + page + '&page_size=' + pageSize;
   return this.get(url);
 };
 
@@ -48,7 +49,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById('loading_indicator').style.display = 'none';
       
       const rootElement = document.getElementById('projects-list-results');
-      rootElement.innerHTML = '<h2>' + json.projects.length + ' projects found</h2>';
+      rootElement.innerHTML = '<h2>' + json.paginator.results + ' projects found</h2>';
+      
+      const previousPageLink = document.getElementById('pagination-previous');
+      previousPageLink.style.display = json.paginator.page > 1 ? 'block' : 'none';
+
+      const nextPageLink = document.getElementById('pagination-next');
+      nextPageLink.style.display = json.paginator.page < json.paginator.last_page ? 'block' : 'none';
       
       json.projects.forEach(function(project) {
         const child = document.createElement('li');
