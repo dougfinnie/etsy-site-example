@@ -19,23 +19,16 @@ RavelryApi.prototype.get = function(url, callback) {
   headers.append('Authorization', 'Basic ' + btoa(this.authUsername + ":" + this.authPassword));
   
   const me = this;
-  fetch(url, { method: 'GET', headers: headers }).then(function(response) {
-    console.log(response);
-    if (response.status == 200) {
-      callback(response);
-    } else {
-      console.log("error");
-      me.onErrorCallback(response);
-    }
-  });
+  fetch(url, { method: 'GET', headers: headers }).then(response => {
+    return response
+  }).catch(error => {
+  return Promise.reject(Error(error.message))
+})
 };
 
 RavelryApi.prototype.projectsList = function(username) {
   const url = this.base + '/projects/' + username + '/list.json';
-  this.get(url, function(response) {
-    console.log(response);
-  });
-  return url;
+  return this.get(url);
 };
 
 
@@ -48,14 +41,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const password = credentialsForm.querySelector("input[name='password_key']").value;
     
     window.ravelryApiClient = new RavelryApi('https://api.ravelry.com', username, password);
+
     window.ravelryApiClient.onError(function(response) {
-      document.getElementById('api-success').style.display = 'none';
-      const errorElement = document.getElementById('api-error');
-      errorElement.style.display = 'block';
-      errorElement.innerHTML = response;
+      alert('An error occurred, check the console');
       console.log(response);
     });
     
+    
+    console.log('a');
     console.log(ravelryApiClient.projectsList('frecklegirl'));
     
     return false;
