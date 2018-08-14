@@ -24,7 +24,7 @@ RavelryApi.prototype.projectsList = function(username) {
 
 document.addEventListener("DOMContentLoaded", function(event) {
   let ravelryApiClient = null;
-
+  
   function renderProjects(username) {
     ravelryApiClient.projectsList(username).then(function(response) {
       return response.json();

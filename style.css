@@ -13,14 +13,14 @@ h1 {
   to {transform: rotate(360deg);}
 }
 
-.spinner:before {
+.loading:before {
   content: '';
   border: 2px solid #ccc;
   animation: rotate .6s linear infinite;
+  border-top-color: black;
+  border-radius: 1em;
 
-  width: 1em;
-  height: 1em;
-
+  width: .75em;
+  height: .75em;
   display: inline-block;
-  margin-left: 1em;
 }
