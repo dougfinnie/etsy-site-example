@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
 
         const title = document.createElement('a');
-        title.href = project.ravelry_url;
+        //title.href = project.links.self.href;
         title.innerText = project.name;
         child.appendChild(title);
         
