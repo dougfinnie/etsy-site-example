@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var credentials =alert(username.value + ':' + password.value);
     
     var ravelryApiClient = new RavelryApi('https://api.ravelry.com');
-    console.log(ravelryApiClient.projectsList);
+    console.log(ravelryApiClient.projectsList());
     
     return false;
   };
@@ -18,7 +18,7 @@ window.RavelryApi = function(base) {
 };
 
 RavelryApi.prototype.projectsList = function(username) {
-  var url = '/projects/' + username + 'list.json';
+  var url = '/projects/' + username + '/list.json';
   return url;
 };
 
