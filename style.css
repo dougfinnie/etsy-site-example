@@ -6,7 +6,7 @@ body {
 }
 
 h1 {
-  font-size: 1.4em;
+  font-size: 1.3em;
 }
 
 @keyframes rotate {
@@ -17,7 +17,23 @@ h2 {
   font-size: 1.3em;
 }
 
-.loading:before {
+.project__results {
+  list-style: none;
+} 
+
+.project__result {
+  line-height: 40px;
+  margin: .5em 0;
+}
+
+.project__result__thumbnail {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  padding-right: 1em;
+}
+
+.spinner:before {
   content: '';
   border: 2px solid #ccc;
   animation: rotate .6s linear infinite;

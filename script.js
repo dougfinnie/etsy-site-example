@@ -42,12 +42,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }).then(function(json) {
       document.getElementById('loading_indicator').style.display = 'none';
       
-      var rootElement = document.getElementById('projects-list-results');
+      const rootElement = document.getElementById('projects-list-results');
       rootElement.innerHTML = '<h2>' + json.projects.length + ' projects found</h2>';
       
       json.projects.forEach(function(project) {
-        var child = document.createElement('LI');
-        child.innerText = project.name;
+        const child = document.createElement('li');
+        child.className = 'project__result';
+        
+        if (project.first_photo) {
+          const img = document.createElement('img');
+          img.src = project.first_photo.square_url;
+          img.className = 'project__result__thumbnail';
+          child.appendChild(img);
+        }
+
+        const title = document.createElement('a');
+        title.href = project.ravelry_url;
+        title.innerText = project.name;
+        child.appendChild(title);
+        
         rootElement.appendChild(child);
       });
     });  
