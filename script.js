@@ -54,8 +54,6 @@ ApiDemo.prototype.createApiClient = function(authUsername, authPassword) {
 ApiDemo.prototype.addEventListeners = function() {
   const credentialsForm = document.getElementById('api-credentials-form');
   const projectListForm = document.getElementById('projects-list-form');
-  const previousLink = document.getElementById('pagination-previous');
-  const nextLink = document.getElementById('pagination-next');
     
 
   const submitProjectSearch = function() {
@@ -85,21 +83,19 @@ ApiDemo.prototype.addEventListeners = function() {
     return false;
   }.bind(this);
 
-  console.log(previousLink);
-  
-  window.previousLink = previousLink;
-  
-  previousLink.addEventListener('click', function() {
-    this.currentProjectPage -= 1;
-    submitProjectSearch();
-    return false;
-  }).bind(this);
+  const previousLink = document.getElementById('pagination-previous');
+  const nextLink = document.getElementById('pagination-next');
 
   nextLink.addEventListener('click', function() {
     this.currentProjectPage += 1;
     submitProjectSearch();
-    return false;
   }.bind(this));
+
+  previousLink.addEventListener('click', function() {
+    this.currentProjectPage -= 1;
+    submitProjectSearch();
+  }.bind(this));
+
 };
 
 
@@ -140,6 +136,13 @@ ApiDemo.prototype.renderProjects = function(username, page) {
   });  
 };
 
-document.addEventListener("DOMContentLoaded", function(event) {
-  window.apiDemo = new ApiDemo();
-});
+
+// go!
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() {
+    new ApiDemo();
+  });
+} else {
+  new ApiDemo();
+}
