@@ -40,8 +40,16 @@ RavelryApi.prototype.projectsList = function(username, page) {
 
 ApiDemo = function() {
   this.ravelryApiClient = null;
+  this.currentProjectPage = null;
+  
+  
   this.addEventListeners();
 };
+
+ApiDemo.prototype.createApiClient = function(authUsername, authPassword) {
+  this.ravelryApiClient = new RavelryApi('https://api.ravelry.com', authUsername, authPassword);
+};
+
 
 ApiDemo.prototype.addEventListeners = function() {
   const credentialsForm = document.getElementById('api-credentials-form');
@@ -50,9 +58,9 @@ ApiDemo.prototype.addEventListeners = function() {
   const nextLink = document.getElementById('pagination-next');
     
 
-  var submitProjectSearch = function() {
+  const submitProjectSearch = function() {
     const username = projectListForm.querySelector("input[name='username']").value;
-    this.renderProjects(username, currentProjectPage);
+    this.renderProjects(username, this.currentProjectPage);
   }.bind(this);
   
 
@@ -61,36 +69,39 @@ ApiDemo.prototype.addEventListeners = function() {
     const usernameKey = credentialsForm.querySelector("input[name='username_key']").value;
     const passwordKey = credentialsForm.querySelector("input[name='password_key']").value;
     
-    ravelryApiClient = new RavelryApi('https://api.ravelry.com', usernameKey, passwordKey);
+    this.createApiClient(usernameKey, passwordKey);
     
     document.getElementById('api-request').style.display = 'block';
-    currentProjectPage = 1;
+    this.currentProjectPage = 1;
     submitProjectSearch();
     
     return false;
-  };
+  }.bind(this);
 
     
   projectListForm.onsubmit = function() {
+    this.currentProjectPage = 1;
     submitProjectSearch();
     return false;
-  };
+  }.bind(this);
+
+  console.log(previousLink);
+  
+  window.previousLink = previousLink;
   
   previousLink.addEventListener('click', function() {
-    currentProjectPage -= 1;
+    this.currentProjectPage -= 1;
     submitProjectSearch();
-  });
+    return false;
+  }).bind(this);
 
   nextLink.addEventListener('click', function() {
-    currentProjectPage += 1;
+    this.currentProjectPage += 1;
     submitProjectSearch();
-  });
+    return false;
+  }.bind(this));
 };
 
-
-ApiDemo.prototype.createApiClient = function(authUsername, authPassword) {
-  this.ravelryApiClient = new RavelryApi('https://api.ravelry.com', usernameKey, passwordKey);
-};
 
 ApiDemo.prototype.renderProjects = function(username, page) {
   document.getElementById('loading_indicator').style.display = 'inline-block';
@@ -131,8 +142,4 @@ ApiDemo.prototype.renderProjects = function(username, page) {
 
 document.addEventListener("DOMContentLoaded", function(event) {
   window.apiDemo = new ApiDemo();
-  let ravelryApiClient = null;
-  let currentProjectPage = 1;
-
-  
 });
