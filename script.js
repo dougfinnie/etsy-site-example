@@ -1,20 +1,29 @@
+window.ravelryApiClient = null;
+
 document.addEventListener("DOMContentLoaded", function(event) {
-  var credentialsForm = document.getElementById('credentials-form');
+  var credentialsForm = document.getElementById('api-credentials-form');
   credentialsForm.onsubmit = function() {
-    var username = credentialsForm.querySelector("input[name='username_key']");
-    var password = credentialsForm.querySelector("input[name='password_key']");
+    var username = credentialsForm.querySelector("input[name='username_key']").value;
+    var password = credentialsForm.querySelector("input[name='password_key']").value;
     
-    var credentials =alert(username.value + ':' + password.value);
+    window.ravelryApiClient = new RavelryApi('https://api.ravelry.com', username, password);
+    ravelryApiClient.onError(function(errorMessage) {
+      document.getElementById('api-success').style.display = 'none';
+      var errorElement = document.getElementById('api-error');
+      errorElement.style.display = 'block';
+      errorElement.innerHTML = errorMessage;
+    )};
     
-    var ravelryApiClient = new RavelryApi('https://api.ravelry.com');
     console.log(ravelryApiClient.projectsList());
     
     return false;
   };
 });
 
-window.RavelryApi = function(base) {
+RavelryApi = function(base, authUsername, authPassword) {
   this.base = base;
+  this.authUsername = authUsername;
+  this.authPassword = authPassword;
 };
 
 RavelryApi.prototype.projectsList = function(username) {
