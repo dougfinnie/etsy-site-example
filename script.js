@@ -9,6 +9,9 @@ RavelryApi = function(base, authUsername, authPassword) {
 
 RavelryApi.prototype.get = function(url, callback) {
   const headers = new Headers();
+
+  
+  // This is the HTTP header that you need to access api.ravelry.com with a read only API key
   headers.append('Authorization', 'Basic ' + btoa(this.authUsername + ":" + this.authPassword));
   
   return fetch(url, { method: 'GET', headers: headers });
@@ -21,9 +24,10 @@ RavelryApi.prototype.projectsList = function(username) {
 
 
 
-
 document.addEventListener("DOMContentLoaded", function(event) {
   let ravelryApiClient = null;
+
+  // request a project list from the API and render it as a list of project names
   
   function renderProjects(username) {
     ravelryApiClient.projectsList(username).then(function(response) {
@@ -42,6 +46,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   
   const credentialsForm = document.getElementById('api-credentials-form');
   const projectListForm = document.getElementById('projects-list-form');
+  
+  // create an API client whenever the credentials form is submitted
 
   credentialsForm.onsubmit = function() {
     const usernameKey = credentialsForm.querySelector("input[name='username_key']").value;

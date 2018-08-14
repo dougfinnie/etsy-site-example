@@ -12,3 +12,14 @@ If you are not using a client library that supports Basic Authentication, you ca
 `btoa` is the Javascript function to base 64 encode a value. In other languages, you'll use whatever base 64 encoding utility or library is available to you.
 
 More information: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+
+
+## Project Files
+
+### ← index.html
+
+A page with two forms - one for API credentials and one for testing the <code>/projects/list.json</code> API call.
+
+### ← script.js
+
+Some Javascript that uses a read only API key to make a Ravelry API request
