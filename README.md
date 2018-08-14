@@ -16,6 +16,10 @@ If you are not using a client library that supports Basic Authentication, you ca
 More information about the `Authorization` header: [https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
 
 
+## Ravelry API Documentation
+
+More information about the API can be found at [https://ravelry.com/api](https://ravelry.com/api)
+
 ## Project Files
 
 ### ← index.html
