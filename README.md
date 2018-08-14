@@ -8,7 +8,7 @@ A page with two forms - one for API credentials and one for testing the <code>/p
 
 ### ← script.js
 
-Some Javascript that uses a read only API key to make a Ravelry API request
+Some JavaScript that uses a read only API key to make a Ravelry API request
 
 
 ## Ravelry API Documentation
@@ -27,7 +27,7 @@ If you are not using a client library that supports Basic Authentication, you ca
 * That name of the header is "Authorization"
 * The value of the header should be "Basic" + " " + btoa(username + ":" + password)
 
-`btoa` is the Javascript function to base 64 encode a value. In other languages, you'll use whatever base 64 encoding utility or library is available to you.
+`btoa` is the JavaScript function to base 64 encode a value. In other languages, you'll use whatever base 64 encoding utility or library is available to you.
 
 
 
