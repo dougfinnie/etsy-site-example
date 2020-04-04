@@ -8,7 +8,7 @@ var request = require("request");
 var app = express();
 
 const ravelryApiEndpoint = 'https://api.ravelry.com';
-
+ 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 
@@ -21,11 +21,17 @@ app.get("/", function(request, response) {
 //   response.send()
 // });
 
-app.get("/products/", function(request, response) {
-  request(options('/stores/' + this.storeId + '/products.json'))
-    .on('response', function(response) {
-      response.send(response);
-  })
+app.get("/products/", function(req, resp) {
+  var opt = {
+    url: ravelryApiEndpoint + '/stores/' + this.storeId + '/products.json',
+    method: 'GET',
+    json: true,
+    auth: {
+      "user": this.authUsername,
+      "pass": this.authPassword
+    }
+  };
+  resp.send(request(opt));
 });
 
 // app.get("/stores/", function(request, response) {
@@ -34,23 +40,11 @@ app.get("/products/", function(request, response) {
 // }); 
 
 
-// // listen for requests :)
-// var listener = app.listen(process.env.PORT, function() {
-//   console.log("Your app is listening on port " + listener.address().port);
-// });
+// listen for requests :)
+var listener = app.listen(process.env.PORT, function() {
+  console.log("Your app is listening on port " + listener.address().port);
+});
 
-function options(url) {
-  var opt = {
-    url: ravelryApiEndpoint + url,
-    method: 'GET',
-    json: true,
-    auth: {
-      "user": this.authUsername,
-      "pass": this.authPassword
-    }
-  }
-  return opt;
-}
 //     stores() {
 //       const url = '/stores/list.json';
 //       console.log(url);
