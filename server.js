@@ -16,12 +16,12 @@ app.get("/", function(request, response) {
 
 app.get("/projects/", function(request, response) {
   var api = new RavelryApi();
-  response.send(api.projectsList(1))
+  response.send(api.projects(1))
 });
 app.get("/products/", function(request, response) {
   var api = new RavelryApi();
-  var products = api.products
-  response.send(products);
+  var products = api.products();
+  response.json(products);
 });
 app.get("/stores/", function(request, response) {
   var api = new RavelryApi();
@@ -57,34 +57,30 @@ class RavelryApi {
             "pass": this.authPassword
           }
       }
-      request.get(options, function (err, response, body) {
-        console.log(body);
-        return body;
+      request(options)
+        .on('response', function(response) {
+           response.on('data', function(data) {
+            // compressed data as it is received
+            console.log('received ' + data.length + ' bytes of compressed data')
+          })
       });
    
 
     }
-    stores()
+    stores() {
+      const url = '/stores/list.json';
+      console.log(url);
+      return this.get(url);      
+    }
+    products() {
+      const url = '/stores/' + this.storeId + '/products.json';
+      console.log(url);
+      return this.get(url);
+    }
+    projects(page) {
+      const pageSize = 25;
+      const url = '/projects/' + this.user + '/list.json?page=' + page + '&page_size=' + pageSize;
+      console.log(url);
+      return this.get(url);
+    }
 }
-
-
-/* globals RavelryApi */
-
-
-RavelryApi.prototype.stores = function() {
-};
-
-RavelryApi.prototype.projectsList = function(page) {
-  const pageSize = 25;
-  const url = '/projects/' + this.user + '/list.json?page=' + page + '&page_size=' + pageSize;
-  console.log(url);
-  return this.get(url);
-};
-
-RavelryApi.prototype.products = function() {
-  const url = '/stores/' + this.storeId + '/products.json';
-  console.log(url);
-  return this.get(url);
-};
-
-
