@@ -31,14 +31,17 @@ function RavelryApi() {
   this.authUsername = process.env.API_KEY;
   this.authPassword = process.env.API_PASSWORD;
   this.debugFunction = null;
+  function get(url) {
+      const http = require('https');
+    this.authUsername;
+
+  }
 };
 
 /* globals RavelryApi */
 
 
 RavelryApi.prototype.get = function(url) {
-  const headers = new Headers();
-  const debugFunction = this.debugFunction;
 
   // This is the HTTP header that you need add in order to access api.ravelry.com with a read only API key
   // `btoa` will base 64 encode a string: https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
@@ -48,7 +51,6 @@ RavelryApi.prototype.get = function(url) {
   return fetch(url, { method: 'GET', headers: headers }).then(function(response) {
     return response.json();
   }).then(function(json) { 
-    if (debugFunction) debugFunction(json);
     return json; 
   });
 };
