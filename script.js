@@ -75,8 +75,8 @@ ApiDemo.prototype.addEventListeners = function() {
 
   // create an API client whenever the credentials form is submitted
   credentialsForm.onsubmit = function() {
-    const usernameKey = credentialsForm.querySelector("input[name='username_key']").value;
-    const passwordKey = credentialsForm.querySelector("input[name='password_key']").value;
+    const usernameKey = process.env.API_KEY;
+    const passwordKey = process.env.API_PASSWORD;
     
     this.createApiClient(usernameKey, passwordKey);
     
