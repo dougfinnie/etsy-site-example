@@ -28,6 +28,7 @@ var listener = app.listen(process.env.PORT, function() {
 
 function RavelryApi() {
   this.base = 'https://api.ravelry.com';
+  this.user = 'knittingimage'
   this.authUsername = process.env.API_KEY;
   this.authPassword = process.env.API_PASSWORD;
 };
@@ -37,29 +38,39 @@ function RavelryApi() {
 
 RavelryApi.prototype.get = function(url) {
 
-  // This is the HTTP header that you need add in order to access api.ravelry.com with a read only API key
-  // `btoa` will base 64 encode a string: https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
-  
-  const http = require('https');
 
-  return http.get(url, { method: 'GET', 
-                        headers: {
-                          'Authorization': ('Basic ' + this.authUsername + ':' + this.authPassword).toString('base64')
-                        }
-                       }
-                 ).then(function(response) {
-                    return response.json();
-                 }).then(function(json) { 
-    return json; 
+  var http = require("http");
+
+  var options = {
+      host: this.base,
+      port: 80,
+      method: "GET",
+      path: url,
+      auth: this.authUsername + ':' + this.authPassword
+  };
+
+  http.get(options, function(rs) {
+      var result = "";
+      rs.on('data', function(data) {
+          result += data;
+      });
+      rs.on('end', function() {
+          console.log(result);
+      });
+    rs.on('error', function() {
+      console.log(result);
+    })
   });
-};
+
+}
 
 // Retrieve a list of projects for a user: https://www.ravelry.com/api#projects_list
 // Pagination is optional, default is no pagination
 
 RavelryApi.prototype.projectsList = function(username, page) {
   const pageSize = 25;
-  const url = this.base + '/projects/' + username + '/list.json?page=' + page + '&page_size=' + pageSize;
+  const url = '/projects/' + this.user + '/list.json?page=' + page + '&page_size=' + pageSize;
+  console.log(url);
   return this.get(url);
 };
 
