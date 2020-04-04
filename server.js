@@ -48,7 +48,7 @@ function RavelryApi() {
 RavelryApi.prototype.get = function(url) {
 
 
-  var http = require("http");
+  var reque = require("http");
 
   var options = {
       host: this.base,
