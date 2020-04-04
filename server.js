@@ -20,9 +20,8 @@ app.get("/projects/", function(request, response) {
 });
 app.get("/products/", function(request, response) {
   var api = new RavelryApi();
-  var products = api.products().on(data => {
-    response.send(data);
-  });
+  var products = api.products
+  response.send(products);
 });
 app.get("/stores/", function(request, response) {
   var api = new RavelryApi();
@@ -49,7 +48,7 @@ function RavelryApi() {
 
 RavelryApi.prototype.get = function(url) {
 
-console.log(this.base);
+  console.log(this.base);
   var request = require("request");
 
   var options = {
@@ -62,8 +61,8 @@ console.log(this.base);
   };
 
   request.get(options, function (err, response, body) {
+    // console.log(body);
     return body;
-    console.log(body);
   });
 
 }
@@ -86,4 +85,5 @@ RavelryApi.prototype.products = function() {
   console.log(url);
   return this.get(url);
 };
+
 
