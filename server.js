@@ -16,7 +16,11 @@ app.get("/", function(request, response) {
 
 app.get("/projects/", function(request, response) {
   var api = new RavelryApi();
-  response.send(api.projectsList('knittingimage',1))
+  response.send(api.projectsList(1))
+});
+app.get("/products/", function(request, response) {
+  var api = new RavelryApi();
+  response.send(api.products());
 });
 
 
@@ -31,6 +35,7 @@ function RavelryApi() {
   this.user = 'knittingimage'
   this.authUsername = process.env.API_KEY;
   this.authPassword = process.env.API_PASSWORD;
+  this.storeId = process.env.STORE_ID;
 };
 
 /* globals RavelryApi */
@@ -64,12 +69,15 @@ RavelryApi.prototype.get = function(url) {
 
 }
 
-// Retrieve a list of projects for a user: https://www.ravelry.com/api#projects_list
-// Pagination is optional, default is no pagination
-
-RavelryApi.prototype.projectsList = function(username, page) {
+RavelryApi.prototype.projectsList = function(page) {
   const pageSize = 25;
   const url = '/projects/' + this.user + '/list.json?page=' + page + '&page_size=' + pageSize;
+  console.log(url);
+  return this.get(url);
+};
+
+RavelryApi.prototype.products = function() {
+  const url = '/stores/' + this.storeId + '/products.json';
   console.log(url);
   return this.get(url);
 };
