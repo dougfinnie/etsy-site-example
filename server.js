@@ -48,27 +48,19 @@ function RavelryApi() {
 RavelryApi.prototype.get = function(url) {
 
 
-  var reque = require("http");
+  var request = require("request");
 
   var options = {
-      host: this.base,
-      port: 80,
-      method: "GET",
-      path: url,
-      auth: this.authUsername + ':' + this.authPassword
+      auth: {
+        "user": this.authUsername,
+        "pass": this.authPassword
+      }
   };
 
-  http.get(options, function(rs) {
-      var result = "";
-      rs.on('data', function(data) {
-          result += data;
-      });
-      rs.on('end', function() {
-          console.log(result);
-      });
-    rs.on('error', function() {
-      console.log(result);
-    })
+  request.get(this.base + url, options).on('response', function(response) {
+    console.log(response.statusCode) // 200
+    console.log(response.headers['content-type']) // 'image/png'
+    console.log(response);
   });
 
 }
