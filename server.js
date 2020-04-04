@@ -3,8 +3,11 @@
 
 // init project
 var express = require("express");
+var request = require("request");
 
 var app = express();
+
+const ravelryApiEndpoint = 'https://api.ravelry.com';
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -14,73 +17,54 @@ app.get("/", function(request, response) {
   response.sendFile(__dirname + "/views/index.html");
 });
 
-app.get("/projects/", function(request, response) {
-  var api = new RavelryApi();
-  response.send(api.projects(1))
-});
+// app.get("/projects/", function(request, response) {
+//   response.send()
+// });
+
 app.get("/products/", function(request, response) {
-  var api = new RavelryApi();
-  var products = api.products();
-  response.json(products);
-});
-app.get("/stores/", function(request, response) {
-  var api = new RavelryApi();
-  response.send(api.stores());
+  request(options('/stores/' + this.storeId + '/products.json'))
+    .on('response', function(response) {
+      response.send(response);
+  })
 });
 
+// app.get("/stores/", function(request, response) {
+//   var api = new RavelryApi();
+//   response.send(api.stores());
+// }); 
 
-// listen for requests :)
-var listener = app.listen(process.env.PORT, function() {
-  console.log("Your app is listening on port " + listener.address().port);
-});
 
+// // listen for requests :)
+// var listener = app.listen(process.env.PORT, function() {
+//   console.log("Your app is listening on port " + listener.address().port);
+// });
 
-class RavelryApi {
-    constructor()
-    {
-      this.base = 'https://api.ravelry.com';
-      this.user = 'knittingimage';
-      this.authUsername = process.env.API_KEY;
-      this.authPassword = process.env.API_PASSWORD;
-      this.storeId = process.env.STORE_ID;
+function options(url) {
+  var opt = {
+    url: ravelryApiEndpoint + url,
+    method: 'GET',
+    json: true,
+    auth: {
+      "user": this.authUsername,
+      "pass": this.authPassword
     }
-    get(url) {
-      console.log(this.base);
-      var request = require("request");
-
-      var options = {
-          url: this.base + url,
-          method: 'GET',
-          json: true,
-          auth: {
-            "user": this.authUsername,
-            "pass": this.authPassword
-          }
-      }
-      request(options)
-        .on('response', function(response) {
-           response.on('data', function(data) {
-            // compressed data as it is received
-            console.log('received ' + data.length + ' bytes of compressed data')
-          })
-      });
-   
-
-    }
-    stores() {
-      const url = '/stores/list.json';
-      console.log(url);
-      return this.get(url);      
-    }
-    products() {
-      const url = '/stores/' + this.storeId + '/products.json';
-      console.log(url);
-      return this.get(url);
-    }
-    projects(page) {
-      const pageSize = 25;
-      const url = '/projects/' + this.user + '/list.json?page=' + page + '&page_size=' + pageSize;
-      console.log(url);
-      return this.get(url);
-    }
+  }
+  return opt;
 }
+//     stores() {
+//       const url = '/stores/list.json';
+//       console.log(url);
+//       return this.get(url);      
+//     }
+//     products() {
+      
+//       console.log(url);
+//       return this.get(url);
+//     }
+//     projects(page) {
+//       const pageSize = 25;
+//       const url = '/projects/' + this.user + '/list.json?page=' + page + '&page_size=' + pageSize;
+//       console.log(url);
+//       return this.get(url);
+//     }
+// }
