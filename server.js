@@ -8,6 +8,9 @@ var request = require("request");
 var app = express();
 
 const ravelryApiEndpoint = 'https://api.ravelry.com';
+const storeId = process.env.STORE_ID;
+const authUsername = process.env.API_KEY;
+const authPassword = process.env.API_PASSWORD;
  
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -23,15 +26,18 @@ app.get("/", function(request, response) {
 
 app.get("/products/", function(req, resp) {
   var opt = {
-    url: ravelryApiEndpoint + '/stores/' + this.storeId + '/products.json',
+    url: ravelryApiEndpoint + '/stores/' + storeId + '/products.json',
     method: 'GET',
     json: true,
     auth: {
-      "user": this.authUsername,
-      "pass": this.authPassword
+      "user": authUsername,
+      "pass": authPassword
     }
   };
-  resp.send(request(opt));
+  request(opt).on('response', function(response) {
+    console.log(response);
+    // resp.send(response);    
+  }).pipe(resp);
 });
 
 // app.get("/stores/", function(request, response) {
