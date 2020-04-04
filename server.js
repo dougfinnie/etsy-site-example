@@ -35,42 +35,43 @@ var listener = app.listen(process.env.PORT, function() {
 });
 
 
-function RavelryApi() {
-  this.base = 'https://api.ravelry.com';
-  this.user = 'knittingimage';
-  this.authUsername = process.env.API_KEY;
-  this.authPassword = process.env.API_PASSWORD;
-  this.storeId = process.env.STORE_ID;
-};
+class RavelryApi {
+    constructor()
+    {
+      this.base = 'https://api.ravelry.com';
+      this.user = 'knittingimage';
+      this.authUsername = process.env.API_KEY;
+      this.authPassword = process.env.API_PASSWORD;
+      this.storeId = process.env.STORE_ID;
+    }
+    get(url) {
+      console.log(this.base);
+      var request = require("request");
+
+      var options = {
+          url: this.base + url,
+          method: 'GET',
+          json: true,
+          auth: {
+            "user": this.authUsername,
+            "pass": this.authPassword
+          }
+      }
+      request.get(options, function (err, response, body) {
+        console.log(body);
+        return body;
+      });
+   
+
+    }
+    stores()
+}
+
 
 /* globals RavelryApi */
 
 
-RavelryApi.prototype.get = function(url) {
-
-  console.log(this.base);
-  var request = require("request");
-
-  var options = {
-      url: this.base + url,
-      method: 'GET',
-      auth: {
-        "user": this.authUsername,
-        "pass": this.authPassword
-      }
-  };
-
-  request.get(options, function (err, response, body) {
-    // console.log(body);
-    return body;
-  });
-
-}
-
 RavelryApi.prototype.stores = function() {
-  const url = '/stores/list.json';
-  console.log(url);
-  return this.get(url);
 };
 
 RavelryApi.prototype.projectsList = function(page) {
