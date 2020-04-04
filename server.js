@@ -22,6 +22,10 @@ app.get("/products/", function(request, response) {
   var api = new RavelryApi();
   response.send(api.products());
 });
+app.get("/stores/", function(request, response) {
+  var api = new RavelryApi();
+  response.send(api.stores());
+});
 
 
 // listen for requests :)
@@ -32,7 +36,7 @@ var listener = app.listen(process.env.PORT, function() {
 
 function RavelryApi() {
   this.base = 'https://api.ravelry.com';
-  this.user = 'knittingimage'
+  this.user = 'knittingimage';
   this.authUsername = process.env.API_KEY;
   this.authPassword = process.env.API_PASSWORD;
   this.storeId = process.env.STORE_ID;
@@ -68,6 +72,12 @@ RavelryApi.prototype.get = function(url) {
   });
 
 }
+
+RavelryApi.prototype.stores = function() {
+  const url = '/stores/list.json';
+  console.log(url);
+  return this.get(url);
+};
 
 RavelryApi.prototype.projectsList = function(page) {
   const pageSize = 25;
