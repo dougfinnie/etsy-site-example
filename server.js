@@ -20,7 +20,9 @@ app.get("/projects/", function(request, response) {
 });
 app.get("/products/", function(request, response) {
   var api = new RavelryApi();
-  response.send(api.products());
+  var products = api.products().on(data => {
+    response.send(data);
+  });
 });
 app.get("/stores/", function(request, response) {
   var api = new RavelryApi();
@@ -60,6 +62,7 @@ console.log(this.base);
   };
 
   request.get(options, function (err, response, body) {
+    return body;
     console.log(body);
   });
 
