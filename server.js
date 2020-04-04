@@ -15,8 +15,8 @@ app.get("/", function(request, response) {
 });
 
 app.get("/projects/", function(request, response) {
-  var api = new RavelryApi()
-  response.send(this.)
+  var api = new RavelryApi();
+  response.send(api.projectsList('knittingimage',1))
 });
 
 
@@ -25,8 +25,9 @@ var listener = app.listen(process.env.PORT, function() {
   console.log("Your app is listening on port " + listener.address().port);
 });
 
-var RavelryApi = function(base, authUsername, authPassword) {
-  this.base = base;
+
+function RavelryApi() {
+  this.base = 'https://api.ravelry.com';
   this.authUsername = process.env.API_KEY;
   this.authPassword = process.env.API_PASSWORD;
   this.debugFunction = null;
@@ -38,6 +39,7 @@ var RavelryApi = function(base, authUsername, authPassword) {
 RavelryApi.prototype.get = function(url) {
   const headers = new Headers();
   const debugFunction = this.debugFunction;
+
   // This is the HTTP header that you need add in order to access api.ravelry.com with a read only API key
   // `btoa` will base 64 encode a string: https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
   
@@ -59,5 +61,4 @@ RavelryApi.prototype.projectsList = function(username, page) {
   const url = this.base + '/projects/' + username + '/list.json?page=' + page + '&page_size=' + pageSize;
   return this.get(url);
 };
-
 
