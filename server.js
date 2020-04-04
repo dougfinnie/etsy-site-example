@@ -47,20 +47,20 @@ function RavelryApi() {
 
 RavelryApi.prototype.get = function(url) {
 
-
+console.log(this.base);
   var request = require("request");
 
   var options = {
+      url: this.base + url,
+      method: 'GET',
       auth: {
         "user": this.authUsername,
         "pass": this.authPassword
       }
   };
 
-  request.get(this.base + url, options).on('response', function(response) {
-    console.log(response.statusCode) // 200
-    console.log(response.headers['content-type']) // 'image/png'
-    console.log(response);
+  request.get(options, function (err, response, body) {
+    console.log(body);
   });
 
 }
