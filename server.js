@@ -24,27 +24,32 @@ app.get("/", function(request, response) {
 // app.get("/projects/", function(request, response) {
 //   response.send()
 // });
-
+app.get("/product/:id", function(req, resp) {
+  const products = require("./data/products_21596.json");  
+  const product = products.products[req.params.id];
+  resp.send(JSON.stringify(product));
+});
 app.get("/products/", function(req, resp) {
   
-  fetchProducts().then(function(data) {
-    data.pipe(resp);
-    // resp.send(data);
-  }, function(err) {
-    console.log(err);
-  });
+  // fetchProducts().then(function(data) {
+  //   resp.send(data);
+  // }, function(err) {
+  //   console.log(err);
+  // });
 
-//   const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
-//   var opt = {
-//     auth: `${authUsername}:${authPassword}`,
-//     method: 'GET'
-//   };
-//   https.get(url, opt, function(response) {
-//       // console.log(response);
-//     var products = resp;
-//     response.pipe(resp);
-    
-//   });
+  const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
+  var opt = {
+    auth: `${authUsername}:${authPassword}`,
+    method: 'GET'
+  };
+  https.get(url, opt, function(response) {
+      // console.log(response);
+    var products = resp;
+    const fs = require("fs");
+    let file = fs.createWriteStream(`data/products_${storeId}.json`);
+    response.pipe(file);
+    response.pipe(resp);    
+  });
 });
 
 function fetchProducts() {
