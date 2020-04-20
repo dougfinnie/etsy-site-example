@@ -26,7 +26,6 @@ app.get("/", function(request, response) {
 // });
 
 app.get("/products/", function(req, resp) {
-  // const prods = getProducts();
   const http = require("https");
   const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
   var opt = {
@@ -35,9 +34,7 @@ app.get("/products/", function(req, resp) {
   };
   http.get(url, opt, function(response) {
       // console.log(response);
-      resp.pipe(response);
-  }).catch(err => {
-    console.log(err);
+      response.pipe(resp);
   });
 });
 // function getProducts() {
