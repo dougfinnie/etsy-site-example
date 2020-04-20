@@ -26,20 +26,28 @@ app.get("/", function(request, response) {
 // });
 
 app.get("/products/", function(req, resp) {
-  const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
-  var opt = {
-    auth: `${authUsername}:${authPassword}`,
-    method: 'GET'
-  };
-  https.get(url, opt, function(response) {
-      // console.log(response);
-    var products = resp;
-    response.pipe(resp);
-    
+  
+  fetchProducts().then(function(data) {
+    data.pipe(resp);
+    // resp.send(data);
+  }, function(err) {
+    console.log(err);
   });
+
+//   const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
+//   var opt = {
+//     auth: `${authUsername}:${authPassword}`,
+//     method: 'GET'
+//   };
+//   https.get(url, opt, function(response) {
+//       // console.log(response);
+//     var products = resp;
+//     response.pipe(resp);
+    
+//   });
 });
 
-async function fetchProducts() {
+function fetchProducts() {
   const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
   var opt = {
     auth: `${authUsername}:${authPassword}`,
