@@ -3,15 +3,16 @@
 
 // init project
 var express = require("express");
-var request = require("request");
 
 var app = express();
 
-const ravelryApiEndpoint = 'https://api.ravelry.com';
+const ravelryApiEndpoint = "https://api.ravelry.com";
 const storeId = process.env.STORE_ID;
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
- 
+
+const http = require("https");
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 
@@ -25,43 +26,44 @@ app.get("/", function(request, response) {
 // });
 
 app.get("/products/", function(req, resp) {
-  const prods = getProducts();
+  // const prods = getProducts();
   var opt = {
-    url: ravelryApiEndpoint + '/stores/' + storeId + '/products.json',
-    method: 'GET',
+    url: ravelryApiEndpoint + "/stores/" + storeId + "/products.json",
+    method: "GET",
     json: true,
     auth: {
-      "user": authUsername,
-      "pass": authPassword
+      user: authUsername,
+      pass: authPassword
     }
   };
-  request(opt).on('response', function(response) {
-    console.log(response);
-    // resp.send(response);    
-  }).pipe(resp);
+  this.http.get(opt, function(response) {
+      console.log(response);
+      // resp.send(response);
+    })
+    .pipe(resp);
 });
 function getProducts() {
-  const fs = require('fs');
+  const fs = require("fs");
   let file = fs.createWriteStream(`data/products_${storeId}.json`);
-    var opt = {
-    url: ravelryApiEndpoint + '/stores/' + storeId + '/products.json',
-    method: 'GET',
+  var opt = {
+    url: ravelryApiEndpoint + "/stores/" + storeId + "/products.json",
+    method: "GET",
     json: true,
     auth: {
-      "user": authUsername,
-      "pass": authPassword
+      user: authUsername,
+      pass: authPassword
     }
   };
-  request(opt).on('response', function(response) {
-    console.log(response);
-    // resp.send(response);    
-  }).pipe(file);
+  this.http.get(opt, function(response) {
+      console.log(response);
+      // resp.send(response);
+    })
+    .pipe(file);
 }
 // app.get("/stores/", function(request, response) {
 //   var api = new RavelryApi();
 //   response.send(api.stores());
-// }); 
-
+// });
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function() {
@@ -71,10 +73,10 @@ var listener = app.listen(process.env.PORT, function() {
 //     stores() {
 //       const url = '/stores/list.json';
 //       console.log(url);
-//       return this.get(url);      
+//       return this.get(url);
 //     }
 //     products() {
-      
+
 //       console.log(url);
 //       return this.get(url);
 //     }
