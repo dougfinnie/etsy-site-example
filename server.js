@@ -28,17 +28,17 @@ app.get("/", function(request, response) {
 app.get("/products/", function(req, resp) {
   // const prods = getProducts();
   const http = require("https");
-
+  const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
   var opt = {
-    url: ravelryApiEndpoint + "/stores/" + storeId + "/products.json",
     auth: `${authUsername}:${authPassword}`,
     method: 'GET'
   };
-  let request = http.request(opt, function(response) {
-      console.log(response);
-      resp.write(response);
-    })
-    .pipe(resp);
+  http.get(url, opt, function(response) {
+      // console.log(response);
+      resp.pipe(response);
+  }).catch(err => {
+    console.log(err);
+  });
 });
 // function getProducts() {
 //   const fs = require("fs");
