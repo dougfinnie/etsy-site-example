@@ -25,6 +25,7 @@ app.get("/", function(request, response) {
 // });
 
 app.get("/products/", function(req, resp) {
+  const prods = getProducts();
   var opt = {
     url: ravelryApiEndpoint + '/stores/' + storeId + '/products.json',
     method: 'GET',
@@ -39,7 +40,23 @@ app.get("/products/", function(req, resp) {
     // resp.send(response);    
   }).pipe(resp);
 });
-
+function getProducts() {
+  const fs = require('fs');
+  let file = fs.createWriteStream(`data/products_${storeId}.json`);
+    var opt = {
+    url: ravelryApiEndpoint + '/stores/' + storeId + '/products.json',
+    method: 'GET',
+    json: true,
+    auth: {
+      "user": authUsername,
+      "pass": authPassword
+    }
+  };
+  request(opt).on('response', function(response) {
+    console.log(response);
+    // resp.send(response);    
+  }).pipe(file);
+}
 // app.get("/stores/", function(request, response) {
 //   var api = new RavelryApi();
 //   response.send(api.stores());
