@@ -27,39 +27,37 @@ app.get("/", function(request, response) {
 
 app.get("/products/", function(req, resp) {
   // const prods = getProducts();
+  const http = require("https");
+
   var opt = {
     url: ravelryApiEndpoint + "/stores/" + storeId + "/products.json",
-    method: "GET",
-    json: true,
-    auth: {
-      user: authUsername,
-      pass: authPassword
-    }
+    auth: `${authUsername}:${authPassword}`,
+    method: 'GET'
   };
-  this.http.get(opt, function(response) {
+  let request = http.request(opt, function(response) {
       console.log(response);
-      // resp.send(response);
+      resp.write(response);
     })
     .pipe(resp);
 });
-function getProducts() {
-  const fs = require("fs");
-  let file = fs.createWriteStream(`data/products_${storeId}.json`);
-  var opt = {
-    url: ravelryApiEndpoint + "/stores/" + storeId + "/products.json",
-    method: "GET",
-    json: true,
-    auth: {
-      user: authUsername,
-      pass: authPassword
-    }
-  };
-  this.http.get(opt, function(response) {
-      console.log(response);
-      // resp.send(response);
-    })
-    .pipe(file);
-}
+// function getProducts() {
+//   const fs = require("fs");
+//   let file = fs.createWriteStream(`data/products_${storeId}.json`);
+//   var opt = {
+//     url: ravelryApiEndpoint + "/stores/" + storeId + "/products.json",
+//     method: "GET",
+//     json: true,
+//     auth: {
+//       user: authUsername,
+//       pass: authPassword
+//     }
+//   };
+//   let request = this.http.get(opt, function(response) {
+//       console.log(response);
+//       // resp.send(response);
+//     })
+//     .pipe(file);
+// }
 // app.get("/stores/", function(request, response) {
 //   var api = new RavelryApi();
 //   response.send(api.stores());
