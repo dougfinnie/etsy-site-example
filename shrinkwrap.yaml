@@ -1,8 +1,14 @@
 dependencies:
-  bootstrap-icons: 1.0.0-alpha3
+  '@fortawesome/fontawesome-free': 5.13.0
   express: 4.17.1
   pug: 2.0.4
 packages:
+  /@fortawesome/fontawesome-free/5.13.0:
+    dev: false
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-xKOeQEl5O47GPZYIMToj6uuA2syyFlq9EMSl2ui0uytjY9xbe8XS0pexNWmxrdcCyNGyDmLyYw5FtKsalBUeOg==
   /@types/babel-types/7.0.7:
     dev: false
     resolution:
@@ -98,12 +104,6 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha512-dhEPs72UPbDnAQJ9ZKMNTP6ptJaionhP5cBb541nXPlW60Jepo9RV/a4fX4XWW9CuFNK22krhrj1+rgzifNCsw==
-  /bootstrap-icons/1.0.0-alpha3:
-    dev: false
-    engines:
-      node: '>=10'
-    resolution:
-      integrity: sha512-UO++43jb/qlWVsC31WkHOjFsTihJkSz0wngnUS+P1ImcCMTqDJqDHySld+hpkzxi+q6fL8iom7nfT3ApAxZ6cQ==
   /bytes/3.1.0:
     dev: false
     engines:
@@ -810,6 +810,6 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
-  bootstrap-icons: ^1.0.0-alpha3
+  '@fortawesome/fontawesome-free': ^5.13.0
   express: ^4.17.1
   pug: ^2.0.4
