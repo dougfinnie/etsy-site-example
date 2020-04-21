@@ -7,12 +7,16 @@
   "description": "A simple Node app built on Express, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "npm run build && node server.js",
+    "build": "gulp"
   },
   "dependencies": {
     "express": "^4.17.1",
     "pug": "^2.0.4",
-    "@fortawesome/fontawesome-free": "^5.13.0"
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "gulp": "^4.0.2"
+  },
+  "devDependencies": {
   },
   "engines": {
     "node": "12.x"
