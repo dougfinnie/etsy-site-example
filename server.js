@@ -4,9 +4,9 @@
 // init project
 var express = require("express");
 var bodyParser = require("body-parser");
-const pug = require("pug");
 var app = express();
 app.set("view engine", "pug");
+const pug = require("pug");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
