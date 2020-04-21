@@ -26,10 +26,29 @@ app.get("/", function(request, response) {
   response.sendFile(__dirname + "/views/index.html");
 });
 app.get("/designer", function(req, resp) {
-  // /designers/{id}.json
+  // 
+  const url = ravelryApiEndpoint + "/designers/jane-burns.json?include=featured_bundles";
+
+  https.get(url, opt, function(response) {
+    // console.log(response);
+    var products = resp;
+    const fs = require("fs");
+    let file = fs.createWriteStream(`data/products_${storeId}.json`);
+    response.pipe(file);
+    response.pipe(resp);
+  });
 });
+// app.get("/loveknitting", function(req, resp) {
+//   const url = ravelryApiEndpoint + "/products/loveknitting/export.json?product_id_list=368294";
+//   https.get(url, opt, function(response) {
+//     // console.log(response);
+//     const fs = require("fs");
+//     let file = fs.createWriteStream(`data/products_${storeId}.json`);
+//     response.pipe(resp);
+//   });
+// });
 app.get("/product/:id", function(req, resp) {
-    const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
+  const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
 
   https.get(url, opt, function(response) {
     // console.log(response);
