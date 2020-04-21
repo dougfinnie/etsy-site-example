@@ -13,6 +13,11 @@ const authPassword = process.env.API_PASSWORD;
 
 const https = require("https");
 
+const opt = {
+  auth: `${authUsername}:${authPassword}`,
+  method: "GET"
+};
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 
@@ -20,62 +25,64 @@ app.use(express.static("public"));
 app.get("/", function(request, response) {
   response.sendFile(__dirname + "/views/index.html");
 });
-
-// app.get("/projects/", function(request, response) {
-//   response.send()
-// });
-app.get("/product/:id", function(req, resp) {
-  const id = req.params.id;
-  const products = require("./data/products_21596.json");  
-  const product = products.products.filter(p => p.id == id);
-  if (product.length == 1) {
-    resp.send(JSON.stringify(product));  
-  } else {
-    resp.sendStatus(404);
-  }
+app.get("/designer", function(req, resp) {
+  // /designers/{id}.json
 });
-app.get("/loveknitting/:id", function(resp, resp) {
-  // products/loveknitting/export
+app.get("/product/:id", function(req, resp) {
+    const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
+
+  https.get(url, opt, function(response) {
+    // console.log(response);
+    var products = resp;
+    const fs = require("fs");
+    let file = fs.createWriteStream(`data/products_${storeId}.json`);
+    response.pipe(file);
+    response.pipe(resp);
+  });
+
+  // const id = req.params.id;
+  // const products = require("./data/products_21596.json");
+  // const product = products.products.filter(p => p.id == id);
+  // if (product.length == 1) {
+  //   resp.send(JSON.stringify(product));
+  // } else {
+  //   resp.sendStatus(404);
+  // }
 });
 app.get("/products/", function(req, resp) {
-  
   // fetchProducts().then(function(data) {
   //   resp.send(data);
   // }, function(err) {
   //   console.log(err);
   // });
-
   const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
-  var opt = {
-    auth: `${authUsername}:${authPassword}`,
-    method: 'GET'
-  };
+
   https.get(url, opt, function(response) {
-      // console.log(response);
+    // console.log(response);
     var products = resp;
     const fs = require("fs");
     let file = fs.createWriteStream(`data/products_${storeId}.json`);
     response.pipe(file);
-    response.pipe(resp);    
+    response.pipe(resp);
   });
 });
 function fetchProducts() {
   const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
   var opt = {
     auth: `${authUsername}:${authPassword}`,
-    method: 'GET'
+    method: "GET"
   };
-  return new Promise ((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let req = https.request(url, opt);
 
-    req.on('response', res => {
+    req.on("response", res => {
       resolve(res);
     });
 
-    req.on('error', err => {
+    req.on("error", err => {
       reject(err);
     });
-  }); 
+  });
 }
 
 // function getProducts() {
