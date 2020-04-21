@@ -6,10 +6,11 @@ var express = require("express");
 
 var app = express();
 
-const ravelryApiEndpoint = "https://api.ravelry.com";
-const storeId = process.env.STORE_ID;
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
+const ravelryApiEndpoint = "https://api.ravelry.com";
+const storeId = process.env.STORE_ID;
+const designerId = 'jane-burns';
 
 const https = require("https");
 
@@ -26,14 +27,12 @@ app.get("/", function(request, response) {
   response.sendFile(__dirname + "/views/index.html");
 });
 app.get("/designer", function(req, resp) {
-  // 
-  const url = ravelryApiEndpoint + "/designers/jane-burns.json?include=featured_bundles";
+  const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
 
   https.get(url, opt, function(response) {
     // console.log(response);
-    var products = resp;
     const fs = require("fs");
-    let file = fs.createWriteStream(`data/products_${storeId}.json`);
+    let file = fs.createWriteStream(`data/designer_${designerId}.json`);
     response.pipe(file);
     response.pipe(resp);
   });
@@ -48,7 +47,7 @@ app.get("/designer", function(req, resp) {
 //   });
 // });
 app.get("/product/:id", function(req, resp) {
-  const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
+  const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
 
   https.get(url, opt, function(response) {
     // console.log(response);
@@ -74,7 +73,7 @@ app.get("/products/", function(req, resp) {
   // }, function(err) {
   //   console.log(err);
   // });
-  const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
+  const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
 
   https.get(url, opt, function(response) {
     // console.log(response);
@@ -86,7 +85,7 @@ app.get("/products/", function(req, resp) {
   });
 });
 function fetchProducts() {
-  const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
+  const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
   var opt = {
     auth: `${authUsername}:${authPassword}`,
     method: "GET"
