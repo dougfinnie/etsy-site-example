@@ -57,22 +57,8 @@ app.get("/product/:id", function(req, resp) {
     response.pipe(file);
     response.pipe(resp);
   });
-
-  // const id = req.params.id;
-  // const products = require("./data/products_21596.json");
-  // const product = products.products.filter(p => p.id == id);
-  // if (product.length == 1) {
-  //   resp.send(JSON.stringify(product));
-  // } else {
-  //   resp.sendStatus(404);
-  // }
 });
 app.get("/products/", function(req, resp) {
-  // fetchProducts().then(function(data) {
-  //   resp.send(data);
-  // }, function(err) {
-  //   console.log(err);
-  // });
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
 
   https.get(url, opt, function(response) {
