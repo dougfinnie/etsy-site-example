@@ -1,0 +1,35 @@
+include _nav
+doctype html
+html
+  head
+    title #{title}
+    include _commonmeta.pug
+    include _jquerybs.pug
+    include _bootstrap.pug
+    include _momentjs.pug
+    include _fontawesome.pug
+    include _week.pug
+  body
+    header
+      +nav('')
+    h1.
+      Jane Burns Designs
+    main(class="container")
+      div.row
+        div.col-md-6.mt-5
+          div.card
+            h2.card-header.
+              Patterns
+            div#latest.card-body
+              +week(results.filter(function(r){return r.score !== '-';}).sort(function (a, b) {return b.twitch - a.twitch;}))
+        div.col-md-6.mt-5
+          div.card
+            h2.card-header.
+              Featured
+            div#latest.card-body
+              - var next = results.filter(function(r){return r.score === '-';});
+              if (next)
+                +week(next)
+    footer.container
+      Made with 
+      a(href='https://glitch.com') Glitch

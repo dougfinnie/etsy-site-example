@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "adaptivecards": "^1.2.5"
+    "pug": "^2.0.4",
+    "bootstrap-icons": "^1.0.0-alpha3"
   },
   "engines": {
     "node": "12.x"
