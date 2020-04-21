@@ -14,10 +14,10 @@
     "express": "^4.17.1",
     "pug": "^2.0.4",
     "@fortawesome/fontawesome-free": "^5.13.0",
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "bootstrap": "^4.4.1"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "engines": {
     "node": "12.x"
   },
