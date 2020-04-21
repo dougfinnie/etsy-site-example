@@ -25,9 +25,17 @@ app.get("/", function(request, response) {
 //   response.send()
 // });
 app.get("/product/:id", function(req, resp) {
+  const id = req.params.id;
   const products = require("./data/products_21596.json");  
-  const product = products.products[req.params.id];
-  resp.send(JSON.stringify(product));
+  const product = products.products.filter(p => p.id == id);
+  if (product.length == 1) {
+    resp.send(JSON.stringify(product));  
+  } else {
+    resp.sendStatus(404);
+  }
+});
+app.get("/loveknitting/:id", function(resp, resp) {
+  // products/loveknitting/export
 });
 app.get("/products/", function(req, resp) {
   
@@ -51,7 +59,6 @@ app.get("/products/", function(req, resp) {
     response.pipe(resp);    
   });
 });
-
 function fetchProducts() {
   const url = ravelryApiEndpoint + "/stores/" + storeId + "/products.json";
   var opt = {
