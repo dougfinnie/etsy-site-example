@@ -1,2 +1,7 @@
 mixin featured(patterns)
+  ul.list-group
+    each pattern in patterns
+      li.list-group-item
+        img.img-thumbnail(src=pattern.first_photo.square_url) 
+        = pattern.name
   

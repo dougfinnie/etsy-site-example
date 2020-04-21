@@ -29,9 +29,10 @@ app.use(express.static("public"));
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
   // response.sendFile(__dirname + "/views/index.html");
-  const designer = require("data/designer_")
+  const designer = require("./data/designer_jane-burns.json");
   response.render("index.pug", {
      title: "Jane Burns Designs",
+    featured: designer.featured_bundles
   });
 });
 app.get("/designer", function(req, resp) {
