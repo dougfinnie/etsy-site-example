@@ -4,6 +4,7 @@ dependencies:
   del: 5.1.0
   express: 4.17.1
   gulp: 4.0.2
+  jquery: 3.5.0
   pug: 2.0.4
 packages:
   /@fortawesome/fontawesome-free/5.13.0:
@@ -1706,6 +1707,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
+  /jquery/3.5.0:
+    dev: false
+    resolution:
+      integrity: sha512-Xb7SVYMvygPxbFMpTFQiHh1J7HClEaThguL15N/Gg37Lri/qKyhRGZYzHRyLH8Stq3Aow0LsHO2O2ci86fCrNQ==
   /js-stringify/1.0.2:
     dev: false
     resolution:
@@ -3258,4 +3263,5 @@ specifiers:
   del: ^5.1.0
   express: ^4.17.1
   gulp: ^4.0.2
+  jquery: ^3.4.1
   pug: ^2.0.4

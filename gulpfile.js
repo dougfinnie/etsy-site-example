@@ -21,7 +21,13 @@ gulp.task('bootstrapcss', function() {
       .pipe(gulp.dest('public/css'));
 });
 gulp.task('bootstrapjs', function() {
-  return gulp.src('node_modules/bootstrap/dist/js/bootstrap.min.js')
+  return gulp.src(['node_modules/bootstrap/dist/js/bootstrap.min.js',
+                  'node_modules/bootstrap/dist/js/bootstrap.min.map'])
       .pipe(gulp.dest('public/js'));
 });
-gulp.task('default', gulp.series(['clean', 'fonts', 'styles', 'bootstrapcss', 'bootstrapjs']));
+gulp.task('jqueryjs', function() {
+  return gulp.src(['node_modules/jquery/dist/jquery.min.js',
+                  'node_modules/jquery/dist/jquery.min.map'])
+      .pipe(gulp.dest('public/js'));
+});
+gulp.task('default', gulp.series(['clean', 'fonts', 'styles', 'bootstrapcss', 'bootstrapjs', 'jqueryjs']));
