@@ -4,7 +4,7 @@
   "//3": "updating this file will download and update your packages",
   "name": "ravelry-api-demo",
   "version": "0.0.1",
-  "description": "A simple Node app built on Express, instantly up and running.",
+  "description": "Node Express running Pug, queries the Ravelry API",
   "main": "server.js",
   "scripts": {
     "start": "npm run build && node server.js",
@@ -30,6 +30,8 @@
   "keywords": [
     "node",
     "express",
-    "ravelry"
+    "ravelry",
+    "pugjs",
+    "gulp"
   ]
 }
