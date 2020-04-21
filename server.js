@@ -3,8 +3,12 @@
 
 // init project
 var express = require("express");
-
+var bodyParser = require("body-parser");
+const pug = require("pug");
 var app = express();
+app.set("view engine", "pug");
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
@@ -24,7 +28,10 @@ app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
-  response.sendFile(__dirname + "/views/index.html");
+  // response.sendFile(__dirname + "/views/index.html");
+  response.render("index.pug", {
+     title: "Jane Burns Designs",
+  });
 });
 app.get("/designer", function(req, resp) {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
