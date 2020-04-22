@@ -57,7 +57,10 @@ app.get("/designer", function(req, resp) {
 //   });
 // });
 app.get("/pattern/:id", function(req, resp) {
-  resp.send(getPattern(req.params.id));
+  const pattern = getPattern(req.params.id);
+  resp.render("pattern.pug", {
+    pattern: pattern.pattern
+  });
 });
 function getPattern(id) {
   const fs = require("fs");

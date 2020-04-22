@@ -2,12 +2,11 @@ mixin pattern(pattern)
   div.row
     div.col-md-6.mt-5
       div.card
-        h2.card-header.
-          pattern.name
-        div#latest.card-body!= pattern.notes
+        h2.card-header
+          = pattern.name
+        div#latest.card-body!= pattern.notes_html
     div.col-md-6.mt-5
       div.card
-        h2.card-header.
-          Featured
         div#latest.card-body
-          +featured(featured)
+          each photo in pattern.photos
+            img.img-thumbnail(src=photo.square_url)
