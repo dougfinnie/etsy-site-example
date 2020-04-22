@@ -57,19 +57,24 @@ app.get("/designer", function(req, resp) {
 //   });
 // });
 app.get("/pattern/:id", function(req, resp) {
-  if 
+  resp.send(getPattern(req.params.id));
 });
-async function getPattern(id) {
+function getPattern(id) {
   const fs = require("fs");
-  if (fs.existsSync(`data/patterns/${id`)) {
+  const patternPath = `/data/patterns/${id}.json`;
+  if (fs.existsSync(patternPath)) {
+    const pattern = require(patternPath);
+    return pattern;
   }
-  const patternId = id;
-  const url = `${ravelryApiEndpoint}/patterns/${patternId}.json`;
+  const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
 
   https.get(url, opt, function(response) {
     // console.log(response);
-    let file = fs.createWriteStream(`data/patterns/{patternId}.json`);
-    response.pipe(file);
+    let file = fs.createWriteStream(patternPath);
+    response.pipe(file).then(() => {
+      const pattern = require(patternPath);
+      return pattern.pattern;
+    });
   });
 }
 app.get("/products/", function(req, resp) {
