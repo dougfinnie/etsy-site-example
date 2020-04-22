@@ -57,18 +57,21 @@ app.get("/designer", function(req, resp) {
 //   });
 // });
 app.get("/pattern/:id", function(req, resp) {
-  const patternId = req.params.id;
+  if 
+});
+async function getPattern(id) {
+  const fs = require("fs");
+  if (fs.existsSync(`data/patterns/${id`)) {
+  }
+  const patternId = id;
   const url = `${ravelryApiEndpoint}/patterns/${patternId}.json`;
 
   https.get(url, opt, function(response) {
     // console.log(response);
-    var products = resp;
-    const fs = require("fs");
-    let file = fs.createWriteStream(`data/pattern_{patternId}.json`);
+    let file = fs.createWriteStream(`data/patterns/{patternId}.json`);
     response.pipe(file);
-    response.pipe(resp);
   });
-});
+}
 app.get("/products/", function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
 
