@@ -3,5 +3,5 @@ mixin featured(patterns)
     each pattern in patterns
       li.list-group-item
         img.img-thumbnail(src=pattern.first_photo.square_url) 
-        = pattern.name
+        a(href="https://www.ravelry.com/bundles/" + pattern.id)= pattern.name
   

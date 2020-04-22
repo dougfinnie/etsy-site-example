@@ -16,7 +16,6 @@ html
     h1.sr-only
       Jane Burns Designs
     main(class="container")
-      +about(about)
       div.row
         div.col-md-6.mt-5
           div.card
@@ -40,6 +39,7 @@ html
               Featured
             div#latest.card-body
               +featured(featured)
+      +about(about)
     footer.container
       span Made with 
       a(href='https://glitch.com') Glitch
