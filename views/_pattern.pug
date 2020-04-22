@@ -3,21 +3,8 @@ mixin pattern(pattern)
     div.col-md-6.mt-5
       div.card
         h2.card-header.
-          Patterns
-        div#latest.card-body
-          p This is my demo to read a Ravelry Store (you need an API key for that store)
-          p Find out more at 
-            a(href="https://www.ravelry.com/pro/developer") https://www.ravelry.com/pro/developer
-          hr
-          ul
-            li 
-              a(href="/products") All Products
-            li 
-              a(href="/Designer") Jane Burns
-            li 
-              a(href="/product/368294") Product 368294
-            li
-              a(href="")
+          pattern.name
+        div#latest.card-body!= pattern.notes
     div.col-md-6.mt-5
       div.card
         h2.card-header.

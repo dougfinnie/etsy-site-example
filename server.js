@@ -61,8 +61,9 @@ app.get("/pattern/:id", function(req, resp) {
 });
 function getPattern(id) {
   const fs = require("fs");
-  const patternPath = `/data/patterns/${id}.json`;
+  const patternPath = `./data/patterns/${id}.json`;
   if (fs.existsSync(patternPath)) {
+    console.log(patternPath + ' exists');
     const pattern = require(patternPath);
     return pattern;
   }
@@ -71,9 +72,11 @@ function getPattern(id) {
   https.get(url, opt, function(response) {
     // console.log(response);
     let file = fs.createWriteStream(patternPath);
-    response.pipe(file).then(() => {
+    
+    var stream = response.pipe(file);
+    stream.on('finish', function () {
       const pattern = require(patternPath);
-      return pattern.pattern;
+      return pattern;
     });
   });
 }
