@@ -32,7 +32,8 @@ app.get("/", function(request, response) {
   const designer = require("./data/designer_jane-burns.json");
   response.render("index.pug", {
      title: "Jane Burns Designs",
-    featured: designer.featured_bundles
+    featured: designer.featured_bundles,
+    about: designer.pattern_author.notes_html
   });
 });
 app.get("/designer", function(req, resp) {
