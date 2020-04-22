@@ -56,14 +56,15 @@ app.get("/designer", function(req, resp) {
 //     response.pipe(resp);
 //   });
 // });
-app.get("/product/:id", function(req, resp) {
-  const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
+app.get("/pattern/:id", function(req, resp) {
+  const patternId = req.params.id;
+  const url = `${ravelryApiEndpoint}/patterns/${patternId}.json`;
 
   https.get(url, opt, function(response) {
     // console.log(response);
     var products = resp;
     const fs = require("fs");
-    let file = fs.createWriteStream(`data/products_${storeId}.json`);
+    let file = fs.createWriteStream(`data/pattern_{patternId}.json`);
     response.pipe(file);
     response.pipe(resp);
   });
