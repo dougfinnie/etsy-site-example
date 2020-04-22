@@ -8,5 +8,15 @@ mixin pattern(pattern)
     div.col-md-6.mt-5
       div.card
         div#latest.card-body
-          each photo in pattern.photos
-            img.img-thumbnail(src=photo.square_url)
+          div
+            each photo in pattern.photos
+              img.img-thumbnail(src=photo.square_url)
+            p
+              strong= pattern.sizes_available
+            ul
+              each yarn in pattern.packs
+                li= yarn.yarn_name
+            ul
+              each needle in pattern.pattern_needle_sizes
+                li= needle.name
+          
