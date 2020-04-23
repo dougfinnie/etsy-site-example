@@ -14,7 +14,7 @@ const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
 const ravelryApiEndpoint = "https://api.ravelry.com";
 const storeId = process.env.STORE_ID;
-const designerId = 'jane-burns';
+const designerId = process.env.DESIGNER_ID;
 
 const https = require("https");
 
@@ -29,7 +29,7 @@ app.use(express.static("public"));
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
   // response.sendFile(__dirname + "/views/index.html");
-  const designer = require("./data/designer_jane-burns.json");
+  const designer = require(`./data/designer_${designerId}.json`);
   response.render("index.pug", {
      title: "Jane Burns Designs",
     featured: designer.featured_bundles,
