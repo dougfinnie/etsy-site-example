@@ -56,7 +56,7 @@ app.get("/designer", function(req, resp) {
 //     response.pipe(resp);
 //   });
 // });
-app.get("/pattern/:id", function(req, resp) {
+app.get("/pattern/:id", async function(req, resp) {
   const pattern = getPattern(req.params.id);
   resp.render("pattern.pug", {
     pattern: pattern.pattern
