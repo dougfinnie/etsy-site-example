@@ -1,0 +1,25 @@
+include _nav
+include _glitch
+doctype html
+html
+  head
+    title #{title}
+    include _commonmeta.pug
+    include _bootstrap.pug
+    include _fontawesome.pug
+  body
+    header
+      div.mt-5.text-center
+        img(src="https://cdn.glitch.com/29d57bd2-6ac1-4702-9368-3907c36bd191%2Fjaneburnsheader.png?v=1587509724660")
+    h1.sr-only
+      Jane Burns Designs
+    main(class="container")
+      div
+        ul
+          foreach pattern in patterns
+            li= pattern.title
+          
+    footer.container
+      span Made with 
+      a(href='https://glitch.com') Glitch
+      +glitch()

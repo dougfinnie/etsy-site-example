@@ -62,6 +62,13 @@ app.get("/pattern/:id", function(req, resp) {
     pattern: pattern.pattern
   });
 });
+app.get("/patterns", function(req, resp) {
+  const patterns = require(`./data/products_${storeId}.json`);
+  resp.send(patterns.products);
+  // resp.render("patterns.pug", {
+  //   patterns: patterns.products
+  // });
+});
 function getPattern(id) {
   const fs = require("fs");
   const patternPath = `./data/patterns/${id}.json`;
