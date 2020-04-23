@@ -16,8 +16,9 @@ html
     main(class="container")
       div
         ul
-          foreach pattern in patterns
-            li= pattern.title
+          each pattern in patterns
+            li
+              a(href="pattern/" +pattern.sku.replace('JB-',''))= pattern.title
           
     footer.container
       span Made with 
