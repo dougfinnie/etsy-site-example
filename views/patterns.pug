@@ -18,7 +18,7 @@ html
         ul
           each pattern in patterns
             li
-              a(href="pattern/" +pattern.sku.replace('JB-',''))= pattern.title
+              a(href="pattern/" +pattern.sku.replace('JB-','').replace('EB-',''))= pattern.title
           
     footer.container
       span Made with 
