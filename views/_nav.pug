@@ -1,5 +1,5 @@
 mixin nav(active)
-  nav.navbar.navbar-expand-lg.navbar-light.bg-light
+  nav.navbar.navbar-expand-sm.navbar-light.bg-light
     div.container-fluid
       a.navbar-brand(href="/") Home
       button.navbar-toggler(type="button",data-bs-toggle="collapse",data-bs-target="#navbarNav", aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
@@ -7,7 +7,7 @@ mixin nav(active)
       div#navbarNav.collapse.navbar-collapse
         ul.navbar-nav
           li.nav-item
-            a.nav-link(href="/patterns") Patterns
+            a.nav-link(class=(active=='patterns' ? 'active' : ''), href="/patterns") Patterns
           li.nav-item
             a.nav-link(href="https://janeburns.co.uk/blog") Blog
           li.nav-item
