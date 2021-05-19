@@ -16,8 +16,7 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "gulp": "^4.0.2",
     "bootstrap": "^5.0.1",
-    "del": "^5.1.0",
-    "jquery": "^3.4.1"
+    "del": "^5.1.0"
   },
   "devDependencies": {},
   "engines": {

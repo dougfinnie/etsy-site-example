@@ -8,7 +8,7 @@ var app = express();
 app.set("view engine", "pug");
 const pug = require("pug");
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
