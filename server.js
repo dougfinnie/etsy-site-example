@@ -8,7 +8,9 @@ var app = express();
 app.set("view engine", "pug");
 const pug = require("pug");
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
+
+// /js and /css bootstrap files
+app.use(express.static(__dirname + "/node_modules/bootstrap/dist"));
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
@@ -31,7 +33,7 @@ app.get("/", function(request, response) {
   // response.sendFile(__dirname + "/views/index.html");
   const designer = require(`./data/designer_${designerId}.json`);
   response.render("index.pug", {
-     title: "Jane Burns Designs",
+    title: "Jane Burns Designs",
     featured: designer.featured_bundles,
     about: designer.pattern_author.notes_html
   });
@@ -73,7 +75,7 @@ function getPattern(id) {
   const fs = require("fs");
   const patternPath = `./data/patterns/${id}.json`;
   if (fs.existsSync(patternPath)) {
-    console.log(patternPath + ' exists');
+    console.log(patternPath + " exists");
     const pattern = require(patternPath);
     return pattern;
   }
@@ -82,9 +84,9 @@ function getPattern(id) {
   https.get(url, opt, function(response) {
     // console.log(response);
     let file = fs.createWriteStream(patternPath);
-    
+
     var stream = response.pipe(file);
-    stream.on('finish', function () {
+    stream.on("finish", function() {
       const pattern = require(patternPath);
       return pattern;
     });
