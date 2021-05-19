@@ -67,8 +67,20 @@ app.get("/pattern/:id", async function(req, resp) {
 app.get("/patterns", function(req, resp) {
   const patterns = require(`./data/products_${storeId}.json`);
   // resp.send(patterns.products);
+  let sorted = patterns.products.sort((a, b) => {
+    let fa = a.title.toLowerCase(),
+        fb = b.title.toLowerCase();
+
+    if (fa < fb) {
+        return -1;
+    }
+    if (fa > fb) {
+        return 1;
+    }
+    return 0;
+  });
   resp.render("patterns.pug", {
-    patterns: patterns.products
+    patterns: sorted
   });
 });
 function getPattern(id) {
