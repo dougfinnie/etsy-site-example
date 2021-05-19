@@ -20,7 +20,6 @@ html
           each pattern in patterns
             li
               a(href="pattern/" +pattern.sku.replace('JB-','').replace('EB-',''))
-                img.img-thumbnail(src=pattern.square_thumbnail_url)
                 = pattern.title
           
     footer.container
