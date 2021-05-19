@@ -15,7 +15,7 @@
     "pug": "^2.0.4",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "gulp": "^4.0.2",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^5.0.1",
     "del": "^5.1.0",
     "jquery": "^3.4.1"
   },
@@ -24,7 +24,7 @@
     "node": "12.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/clumsy-seen-pangolin"
+    "url": "https://glitch.com/edit/#!/jane-burns-designs"
   },
   "license": "MIT",
   "keywords": [
