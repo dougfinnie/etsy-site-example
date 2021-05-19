@@ -5,8 +5,11 @@ mixin pattern(pattern)
         h2.card-header
           = pattern.name
         div#latest.card-body
-          each photo in pattern.photos
-            img.img-thumbnail(src=photo.square_url)
+          each photo, index in pattern.photos
+            if index == 0
+              img.img-fluid(src=photo.shelved_url)
+            else
+              img.img-thumbnail(src=photo.square_url)
           != pattern.notes_html
     div.col-md-6.mt-5
       div.card
