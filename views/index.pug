@@ -16,16 +16,18 @@ html
     h1.sr-only
       Jane Burns Designs
     main(class="container")
-      include _nav.pug
+      +nav()
       div.row
         div.col-md-6.mt-5
           div.card
             h2.card-header.
               Patterns
             div#latest.card-body
-              p This is my demo to read a Ravelry Store (you need an API key for that store)
-              p Find out more at 
+              p This is a demo to run a dynamic website yourself that gets all the information form your Ravelry Store.
+              p You will need an API key  (find out more at 
                 a(href="https://www.ravelry.com/pro/developer") https://www.ravelry.com/pro/developer
+                | ) but once you have, you can remix this site and it will work exactly the same but with your information.
+                
               hr
               ul
                 li 
