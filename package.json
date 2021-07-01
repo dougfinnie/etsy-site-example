@@ -12,11 +12,12 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "pug": "^2.0.4",
-    "@fortawesome/fontawesome-free": "^5.13.0",
+    "pug": "^3.0.2",
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "gulp": "^4.0.2",
     "bootstrap": "^5.0.1",
-    "del": "^5.1.0"
+    "del": "^6.0.0",
+    "axios": "^0.21.1"
   },
   "devDependencies": {},
   "engines": {
