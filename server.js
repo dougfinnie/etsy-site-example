@@ -2,17 +2,17 @@
 // where your node app starts
 
 // init project
-var express = require("express");
-var bodyParser = require("body-parser");
+import express, { static } from "express";
+import { urlencoded } from "body-parser";
 var app = express();
 app.set("view engine", "pug");
-const pug = require("pug");
-const axios = require('axios');
+import pug from "pug";
+import { get } from 'axios';
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(urlencoded({ extended: true }));
 
 // /js and /css bootstrap files
-app.use(express.static(__dirname + "/node_modules/bootstrap/dist"));
+app.use(static(__dirname + "/node_modules/bootstrap/dist"));
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
@@ -26,7 +26,7 @@ const opt = {
 };
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
+app.use(static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
@@ -43,7 +43,7 @@ app.get("/designer", function(req, resp) {
 
   (async () => {
     try {
-      const response = await axios.get(url)
+      const response = await get(url)
       const fs = require("fs");
       let file = fs.createWriteStream(`data/designer_${designerId}.json`);
       response.pipe(file);
@@ -53,15 +53,7 @@ app.get("/designer", function(req, resp) {
     }
   })();
 });
-// app.get("/loveknitting", function(req, resp) {
-//   const url = ravelryApiEndpoint + "/products/loveknitting/export.json?product_id_list=368294";
-//   https.get(url, opt, function(response) {
-//     // console.log(response);
-//     const fs = require("fs");
-//     let file = fs.createWriteStream(`data/products_${storeId}.json`);
-//     response.pipe(resp);
-//   });
-// });
+
 app.get("/pattern/:id", async function(req, resp) {
   console.log(req.params.id);
   const pattern = await getPattern(req.params.id);
@@ -98,7 +90,7 @@ async function getPattern(id) {
   }
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
     try {
-      const response = await axios.get(url)
+      const response = await get(url)
      let file = fs.createWriteStream(patternPath);
 
       var stream = response.pipe(file);
@@ -115,7 +107,7 @@ app.get("/products/", function(req, resp) {
 
   (async () => {
     try {
-      const response = await axios.get(url)
+      const response = await get(url)
       const fs = require("fs");
       let file = fs.createWriteStream(`data/products_${storeId}.json`);
       response.pipe(file);
