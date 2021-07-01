@@ -2,17 +2,17 @@
 // where your node app starts
 
 // init project
-import express, { static } from "express";
-import { urlencoded } from "body-parser";
+var express = require("express");
+var bodyParser = require("body-parser");
 var app = express();
 app.set("view engine", "pug");
-import pug from "pug";
-import { get } from 'axios';
+const pug = require("pug");
+const axios = require('axios');
 
-app.use(urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // /js and /css bootstrap files
-app.use(static(__dirname + "/node_modules/bootstrap/dist"));
+app.use(express.static(__dirname + "/node_modules/bootstrap/dist"));
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
@@ -26,7 +26,7 @@ const opt = {
 };
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(static("public"));
+app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
@@ -43,7 +43,7 @@ app.get("/designer", function(req, resp) {
 
   (async () => {
     try {
-      const response = await get(url)
+      const response = await axios.get(url, opt)
       const fs = require("fs");
       let file = fs.createWriteStream(`data/designer_${designerId}.json`);
       response.pipe(file);
@@ -56,7 +56,7 @@ app.get("/designer", function(req, resp) {
 
 app.get("/pattern/:id", async function(req, resp) {
   console.log(req.params.id);
-  const pattern = await getPattern(req.params.id);
+  const pattern = getPattern(req.params.id);
   resp.render("pattern.pug", {
     pattern: pattern.pattern
   });
@@ -80,17 +80,19 @@ app.get("/patterns", function(req, resp) {
     patterns: sorted
   });
 });
-async function getPattern(id) {
+function getPattern(id) {
   const fs = require("fs");
   const patternPath = `./data/patterns/${id}.json`;
-  if (await fs.exists(patternPath)) {
+  if (fs.existsSync(patternPath)) {
     console.log(patternPath + " exists");
     const pattern = require(patternPath);
     return pattern;
   }
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
     try {
-      const response = await get(url)
+      const response = async() => {
+        return await axios.get(url, opt)
+      };
      let file = fs.createWriteStream(patternPath);
 
       var stream = response.pipe(file);
@@ -99,7 +101,7 @@ async function getPattern(id) {
         return pattern;
       });
     } catch (error) {
-      console.log(error.response.body);
+      console.log(error.response);
     }
 }
 app.get("/products/", function(req, resp) {
@@ -107,7 +109,7 @@ app.get("/products/", function(req, resp) {
 
   (async () => {
     try {
-      const response = await get(url)
+      const response = await axios.get(url, opt)
       const fs = require("fs");
       let file = fs.createWriteStream(`data/products_${storeId}.json`);
       response.pipe(file);
