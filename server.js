@@ -21,8 +21,7 @@ const storeId = process.env.STORE_ID;
 const designerId = process.env.DESIGNER_ID;
 
 const opt = {
-  auth: `${authUsername}:${authPassword}`,
-  method: "GET"
+  auth: `username:${authUsername}, password:${authPassword}`
 };
 
 // http://expressjs.com/en/starter/static-files.html
