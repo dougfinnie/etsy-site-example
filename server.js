@@ -63,7 +63,8 @@ app.get("/designer", function(req, resp) {
 //   });
 // });
 app.get("/pattern/:id", async function(req, resp) {
-  const pattern = getPattern(req.params.id);
+  console.log(req.params.id);
+  const pattern = await getPattern(req.params.id);
   resp.render("pattern.pug", {
     pattern: pattern.pattern
   });
@@ -87,16 +88,15 @@ app.get("/patterns", function(req, resp) {
     patterns: sorted
   });
 });
-function getPattern(id) {
+async function getPattern(id) {
   const fs = require("fs");
   const patternPath = `./data/patterns/${id}.json`;
-  if (fs.existsSync(patternPath)) {
+  if (await fs.exists(patternPath)) {
     console.log(patternPath + " exists");
     const pattern = require(patternPath);
     return pattern;
   }
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
-  (async () => {
     try {
       const response = await axios.get(url)
      let file = fs.createWriteStream(patternPath);
@@ -109,7 +109,6 @@ function getPattern(id) {
     } catch (error) {
       console.log(error.response.body);
     }
-  })();
 }
 app.get("/products/", function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
