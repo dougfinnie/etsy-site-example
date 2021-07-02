@@ -93,33 +93,28 @@ function getPattern(id) {
   }
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
 
-  https.get(url, opt, function(response) {
+  getAPI(url).then(function (json) {
     // console.log(response);
-    let file = fs.createWriteStream(patternPath);
-
-    var stream = response.pipe(file);
-    stream.on("finish", function() {
-      const pattern = require(patternPath);
-      return pattern;
+    let file = fs.writeFile(patternPath, json, err => {
+      // Checking for errors
+      if (err) throw err; 
+      console.log("Done writing"); // Success
     });
+    return json;
   });
 }
 app.get("/products/", function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
   getAPI(url).then(function (json) {
     const fs = require("fs");
-    let file = fs.createWriteStream(`data/products_${storeId}.json`);
-    file.
+    let file = fs.writeFile(`data/products_${storeId}.json`, json, err => {
+      // Checking for errors
+      if (err) throw err; 
+      console.log("Done writing"); // Success
+    });
     return json;
   }).catch((error)=>{
     console.log(error);
-  });
-  https.get(url, opt, function(response) {
-    // console.log(response);
-    const fs = require("fs");
-    let file = fs.createWriteStream(`data/products_${storeId}.json`);
-    response.pipe(file);
-    response.pipe(resp);
   });
 });
 function fetchProducts() {
