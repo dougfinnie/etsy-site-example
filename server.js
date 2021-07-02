@@ -106,10 +106,16 @@ function getPattern(id) {
 }
 app.get("/products/", function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
-
+  getAPI(url).then(function (json) {
+    const fs = require("fs");
+    let file = fs.createWriteStream(`data/products_${storeId}.json`);
+    file.
+    return json;
+  }).catch((error)=>{
+    console.log(error);
+  });
   https.get(url, opt, function(response) {
     // console.log(response);
-    var products = resp;
     const fs = require("fs");
     let file = fs.createWriteStream(`data/products_${storeId}.json`);
     response.pipe(file);
@@ -118,65 +124,30 @@ app.get("/products/", function(req, resp) {
 });
 function fetchProducts() {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
-  var opt = {
-    auth: `${authUsername}:${authPassword}`,
-    method: "GET"
-  };
-  return new Promise((resolve, reject) => {
-    let req = https.request(url, opt);
-
-    req.on("response", res => {
-      resolve(res);
-    });
-
-    req.on("error", err => {
-      reject(err);
-    });
+  getAPI(url).then(function (json) {
+    return json;
+  }).catch((error)=>{
+    console.log(error);
   });
 }
 
-// function getProducts() {
-//   const fs = require("fs");
-//   let file = fs.createWriteStream(`data/products_${storeId}.json`);
-//   var opt = {
-//     url: ravelryApiEndpoint + "/stores/" + storeId + "/products.json",
-//     method: "GET",
-//     json: true,
-//     auth: {
-//       user: authUsername,
-//       pass: authPassword
-//     }
-//   };
-//   let request = this.http.get(opt, function(response) {
-//       console.log(response);
-//       // resp.send(response);
-//     })
-//     .pipe(file);
-// }
-// app.get("/stores/", function(request, response) {
-//   var api = new RavelryApi();
-//   response.send(api.stores());
-// });
+function getAPI(url) {
+  const headers = new Headers();
+  headers.append("Authorization", "Basic " + btoa(authUsername + ":" + authPassword));
+  return fetch(url, { method: "GET", headers: headers })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (json) {
+      return json;
+    }).catch(function(error){
+      console.log(error);
+    });
 
-// listen for requests :)
+}
+
+
 var listener = app.listen(process.env.PORT, function() {
   console.log("Your app is listening on port " + listener.address().port);
 });
 
-//     stores() {
-//       const url = '/stores/list.json';
-//       console.log(url);
-//       return this.get(url);
-//     }
-//     products() {
-
-//       console.log(url);
-//       return this.get(url);
-//     }
-//     projects(page) {
-//       const pageSize = 25;
-//       const url = '/projects/' + this.user + '/list.json?page=' + page + '&page_size=' + pageSize;
-//       console.log(url);
-//       return this.get(url);
-//     }
-// }
