@@ -127,8 +127,11 @@ function fetchProducts() {
 }
 
 function getAPI(url) {
+  const fetch = require('fetch');
+  global.fetch = fetch
+  global.Headers = fetch.Headers;
   const headers = new Headers();
-  headers.append("Authorization", "Basic " + btoa(authUsername + ":" + authPassword));
+  headers.append("Authorization", "Basic " +  Buffer.from(authUsername + ":" + authPassword).toString('base64'));
   return fetch(url, { method: "GET", headers: headers })
     .then(function (response) {
       return response.json();
