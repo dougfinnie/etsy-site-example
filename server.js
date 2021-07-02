@@ -19,8 +19,10 @@ const storeId = process.env.STORE_ID;
 const designerId = process.env.DESIGNER_ID;
 
 const auth = {
-  username: authUsername,
-  password: authPassword
+  auth: {    
+    username: authUsername,
+    password: authPassword
+  }
 };
 
 // http://expressjs.com/en/starter/static-files.html
