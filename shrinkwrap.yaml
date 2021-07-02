@@ -1,9 +1,9 @@
 dependencies:
   '@fortawesome/fontawesome-free': 5.15.3
+  axios: 0.21.1
   bootstrap: 5.0.1
   del: 5.1.0
   express: 4.17.1
-  fetch: 1.1.0
   gulp: 4.0.2
   pug: 2.0.4
 packages:
@@ -292,6 +292,12 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+  /axios/0.21.1:
+    dependencies:
+      follow-redirects: 1.14.1
+    dev: false
+    resolution:
+      integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   /babel-runtime/6.26.0:
     dependencies:
       core-js: 2.6.11
@@ -360,14 +366,6 @@ packages:
     optional: true
     resolution:
       integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
-  /biskviit/1.0.1:
-    dependencies:
-      psl: 1.8.0
-    dev: false
-    engines:
-      node: '>=1.0.0'
-    resolution:
-      integrity: sha1-A3oM1LcbnjMf2QoRIt4X3EnkIKc=
   /body-parser/1.19.0:
     dependencies:
       bytes: 3.1.0
@@ -818,12 +816,6 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
-  /encoding/0.1.12:
-    dependencies:
-      iconv-lite: 0.4.24
-    dev: false
-    resolution:
-      integrity: sha1-U4tm8+5izRq1HsMjgp0flIDHS+s=
   /end-of-stream/1.4.4:
     dependencies:
       once: 1.4.0
@@ -1015,13 +1007,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-YOadQRnHd5q6PogvAR/x62BGituF2ufiEA6s8aavQANw5YKHERI4AREboX6KotzP8oX2klxYF2wcV/7bn1clfQ==
-  /fetch/1.1.0:
-    dependencies:
-      biskviit: 1.0.1
-      encoding: 0.1.12
-    dev: false
-    resolution:
-      integrity: sha1-CoJ58Gvjf58Ou1Z1YKMKSA2lmi4=
   /file-uri-to-path/1.0.0:
     dev: false
     optional: true
@@ -1116,6 +1101,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-3Z4XhFZ3992uIq0XOqb9AreonueSYphE6oYbpt5+3u06JWklbsPkNv3ZKkP9Bz/r+1MWCaMoSQ28P85+1Yc77w==
+  /follow-redirects/1.14.1:
+    dev: false
+    engines:
+      node: '>=4.0'
+    resolution:
+      integrity: sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
   /for-in/1.0.2:
     dev: false
     engines:
@@ -2322,10 +2313,6 @@ packages:
       node: '>= 0.10'
     resolution:
       integrity: sha512-dh/frvCBVmSsDYzw6n926jv974gddhkFPfiN8hPOi30Wax25QZyZEGveluCgliBnqmuM+UJmBErbAUFIoDbjOw==
-  /psl/1.8.0:
-    dev: false
-    resolution:
-      integrity: sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ==
   /pug-attrs/2.0.4:
     dependencies:
       constantinople: 3.1.2
@@ -3278,9 +3265,9 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   '@fortawesome/fontawesome-free': ^5.15.3
+  axios: ^0.21.1
   bootstrap: ^5.0.1
   del: ^5.1.0
   express: ^4.17.1
-  fetch: ^1.1.0
   gulp: ^4.0.2
   pug: ^2.0.4

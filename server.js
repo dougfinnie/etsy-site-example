@@ -18,11 +18,9 @@ const ravelryApiEndpoint = "https://api.ravelry.com";
 const storeId = process.env.STORE_ID;
 const designerId = process.env.DESIGNER_ID;
 
-const https = require("https");
-
-const opt = {
-  auth: `${authUsername}:${authPassword}`,
-  method: "GET"
+const auth = {
+  username: authUsername,
+  password: authPassword
 };
 
 // http://expressjs.com/en/starter/static-files.html
@@ -41,12 +39,12 @@ app.get("/", function(request, response) {
 app.get("/designer", function(req, resp) {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
 
-  https.get(url, opt, function(response) {
-    // console.log(response);
+  getAPI(url).then(function (json) {
     const fs = require("fs");
     let file = fs.createWriteStream(`data/designer_${designerId}.json`);
-    response.pipe(file);
-    response.pipe(resp);
+    json.pipe(file);
+    json.pipe(resp);
+    return json;
   });
 });
 // app.get("/loveknitting", function(req, resp) {
@@ -105,17 +103,13 @@ function getPattern(id) {
 }
 app.get("/products/", function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
-  getAPI(url).then(function (json) {
+  const json = getAPI(url);
     const fs = require("fs");
     let file = fs.writeFile(`data/products_${storeId}.json`, json, err => {
       // Checking for errors
       if (err) throw err; 
       console.log("Done writing"); // Success
-    });
     return json;
-  }).catch((error)=>{
-    console.log(error);
-  });
 });
 function fetchProducts() {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
@@ -127,21 +121,20 @@ function fetchProducts() {
 }
 
 function getAPI(url) {
-  const fetch = require('fetch');
-  global.fetch = fetch
-  global.Headers = fetch.Headers;
-  const headers = new Headers();
-  headers.append("Authorization", "Basic " +  Buffer.from(authUsername + ":" + authPassword).toString('base64'));
-  return fetch(url, { method: "GET", headers: headers })
+  const axios = require('axios');
+  axios.get(url, auth)
     .then(function (response) {
-      return response.json();
+      // handle success
+    return response;
+      console.log(response);
     })
-    .then(function (json) {
-      return json;
-    }).catch(function(error){
+    .catch(function (error) {
+      // handle error
       console.log(error);
+    })
+    .then(function () {
+      // always executed
     });
-
 }
 
 
