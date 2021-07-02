@@ -58,6 +58,7 @@ app.get("/designer", function(req, resp) {
 // });
 app.get("/pattern/:id", async function(req, resp) {
   const pattern = getPattern(req.params.id);
+  console.log(pattern);
   resp.render("pattern.pug", {
     pattern: pattern.pattern
   });
@@ -84,14 +85,14 @@ app.get("/patterns", function(req, resp) {
 function getPattern(id) {
   const fs = require("fs");
   const patternPath = `./data/patterns/${id}.json`;
-  if (fs.existsSync(patternPath)) {
+  if (checkFileExists(patternPath)) {
     console.log(patternPath + " exists");
     const pattern = require(patternPath);
     return pattern;
   }
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
 
-  getAPI(url).then(function (json) {
+  const json = getAPI(url);
     // console.log(response);
     let file = fs.writeFile(patternPath, json, err => {
       // Checking for errors
@@ -99,7 +100,6 @@ function getPattern(id) {
       console.log("Done writing"); // Success
     });
     return json;
-  });
 }
 app.get("/products/", function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
@@ -109,15 +109,14 @@ app.get("/products/", function(req, resp) {
       // Checking for errors
       if (err) throw err; 
       console.log("Done writing"); // Success
-    return json;
+    });
+  return json;
 });
+
 function fetchProducts() {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
-  getAPI(url).then(function (json) {
-    return json;
-  }).catch((error)=>{
-    console.log(error);
-  });
+  const json = getAPI(url);
+  return json;
 }
 
 function getAPI(url) {
@@ -125,6 +124,7 @@ function getAPI(url) {
   axios.get(url, auth)
     .then(function (response) {
       // handle success
+    console.log(response);
     return response;
       console.log(response);
     })
@@ -136,7 +136,10 @@ function getAPI(url) {
       // always executed
     });
 }
-
+function checkFileExists(file) {
+  const fs = require('fs');
+  return fs.existsSync(file)
+}
 
 var listener = app.listen(process.env.PORT, function() {
   console.log("Your app is listening on port " + listener.address().port);
