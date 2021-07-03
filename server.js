@@ -95,13 +95,13 @@ function getPattern(id) {
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
 
   const json = getAPI(url);
-    // console.log(response);
-    let file = fs.writeFile(patternPath, json, err => {
+    console.log(json.data.pattern);
+    // let file = fs.writeFile(patternPath, json.data.pattern, err => {
       // Checking for errors
-      if (err) throw err; 
-      console.log("Done writing"); // Success
-    });
-    return json;
+    //   if (err) throw err; 
+    //   console.log("Done writing"); // Success
+    // });
+    return json.data.pattern;
 }
 app.get("/products/", function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
@@ -126,9 +126,8 @@ function getAPI(url) {
   axios.get(url, auth)
     .then(function (response) {
       // handle success
-    console.log(response);
+    // console.log(response);
     return response;
-      console.log(response);
     })
     .catch(function (error) {
       // handle error
