@@ -59,6 +59,7 @@ app.get("/designer", function(req, resp) {
 //   });
 // });
 app.get("/pattern/:id", async function(req, resp) {
+  console.log(req.params.id);
   const pattern = getPattern(req.params.id);
   console.log(pattern);
   resp.render("pattern.pug", {
@@ -95,13 +96,13 @@ function getPattern(id) {
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
 
   const json = getAPI(url);
-    console.log(json.data.pattern);
+    console.log(json);
     // let file = fs.writeFile(patternPath, json.data.pattern, err => {
       // Checking for errors
     //   if (err) throw err; 
     //   console.log("Done writing"); // Success
     // });
-    return json.data.pattern;
+    return json;
 }
 app.get("/products/", function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
@@ -123,12 +124,8 @@ function fetchProducts() {
 
 function getAPI(url) {
   const axios = require('axios');
-  axios.get(url, auth)
-    .then(function (response) {
-      // handle success
-    // console.log(response);
-    return response;
-    })
+  const pattern = axios.get(url, auth)
+    .then((response) => response.data)
     .catch(function (error) {
       // handle error
       console.log(error);
