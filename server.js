@@ -122,18 +122,13 @@ function fetchProducts() {
   return json;
 }
 
-function getAPI(url) {
+async function getAPI(url) {
   const axios = require('axios');
-  const pattern = axios.get(url, auth)
-    .then((response) => response)
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .then(function () {
-      // always executed
-    });
-  return pattern;
+  const res = await axios.get(url, auth).then(response => {
+    return response;
+  }).catch(err => {
+    console.log(err);
+  });
 }
 function checkFileExists(file) {
   const fs = require('fs');
