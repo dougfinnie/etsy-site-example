@@ -95,7 +95,7 @@ function getPattern(id) {
   }
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
 
-  const json = getAPI(url);
+  const json = getAPI(url).then(response => response.data);
     console.log(json);
     // let file = fs.writeFile(patternPath, json.data.pattern, err => {
       // Checking for errors
@@ -104,9 +104,9 @@ function getPattern(id) {
     // });
     return json;
 }
-app.get("/products/", function(req, resp) {
+app.get("/products/", async function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
-  const json = getAPI(url);
+  const json = await getAPI(url);
     const fs = require("fs");
     let file = fs.writeFile(`data/products_${storeId}.json`, json, err => {
       // Checking for errors
@@ -125,7 +125,7 @@ function fetchProducts() {
 function getAPI(url) {
   const axios = require('axios');
   const pattern = axios.get(url, auth)
-    .then((response) => response.data)
+    .then((response) => response)
     .catch(function (error) {
       // handle error
       console.log(error);
@@ -133,6 +133,7 @@ function getAPI(url) {
     .then(function () {
       // always executed
     });
+  return pattern;
 }
 function checkFileExists(file) {
   const fs = require('fs');
