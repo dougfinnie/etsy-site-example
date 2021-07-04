@@ -99,7 +99,7 @@ async function getPattern(id) {
   const json = await axios.get(url, auth).then(response => {
     return response.data;
   });
-    let file = fs.writeFile(patternPath, json.pattern, err => {
+    let file = fs.writeFile(patternPath, JSON.stringify(json), err => {
       // Checking for errors
       if (err) throw err; 
       console.log("Done writing"); // Success
