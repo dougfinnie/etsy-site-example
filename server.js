@@ -95,7 +95,9 @@ function getPattern(id) {
   }
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
 
-  const json = getAPI(url).then(response => response.data);
+  const json = getAPI(url).then(response => {
+    return response;
+  });
     console.log(json);
     // let file = fs.writeFile(patternPath, json.data.pattern, err => {
       // Checking for errors
