@@ -16,9 +16,9 @@ html
     +nav('patterns')
     main(class="container")
       div
-        ul
+        ul.list-group
           each pattern in patterns
-            li
+            li.list-group.item
               a(href="pattern/" +pattern.sku.replace('JB-','').replace('EB-',''))
                 = pattern.title
           
