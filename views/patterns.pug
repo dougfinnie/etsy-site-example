@@ -15,10 +15,11 @@ html
       Jane Burns Designs
     +nav('patterns')
     main(class="container")
+      h2 Patterns
       div
         ul.list-group
           each pattern in patterns
-            li.list-group.item
+            li.list-group-item
               a(href="pattern/" +pattern.sku.replace('JB-','').replace('EB-',''))
                 = pattern.title
           
