@@ -68,7 +68,8 @@ app.get("/pattern/:id", async function(req, resp) {
     pattern: pattern.pattern
   });
 });
-app.get("/patterns", function(req, resp) {
+app.get("/patterns",async function(req, resp) {
+  await fetchProducts();
   const patterns = require(`./data/products/${storeId}.json`);
   // resp.send(patterns.products);
   let sorted = patterns.products.sort((a, b) => {
