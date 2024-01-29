@@ -23,4 +23,15 @@ mixin pattern(pattern)
             ul
               each needle in pattern.pattern_needle_sizes
                 li= needle.name
+    div.col-md-6.mt-5
+      div.card
+        div#store.card-body
+          div
+            p
+              strong= Store
+            ul
+              each source in pattern.printings
+                li
+                  a(href=source.pattern_source.url)
+                    =source.pattern_source.name
           
