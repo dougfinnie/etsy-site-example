@@ -23,13 +23,17 @@ mixin pattern(pattern)
             ul
               each needle in pattern.pattern_needle_sizes
                 li= needle.name
+  div.row
     div.col-md-6.mt-5
       div.card
-        div#store.card-body
+        h2.card-header
+            = "Links"
+        div#links.card-body
           div
-            p
-              strong= Store
-            ul
+            a(href=pattern.download_location.url)
+            ="Buy here"
+            ul Also seen at:"
+              li
               each source in pattern.printings
                 li
                   a(href=source.pattern_source.url)
