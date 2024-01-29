@@ -10,6 +10,7 @@ mixin pattern(pattern)
               img.img-fluid(src=photo.shelved_url)
             else
               img.img-thumbnail(src=photo.square_url)
+          br
           != pattern.notes_html
     div.col-md-6.mt-5
       div.card
@@ -26,6 +27,9 @@ mixin pattern(pattern)
             each tag in pattern.pattern_attributes
               span.badge.rounded-pill.bg-secondary
                 = tag.permalink
+            br
+            | &#11088;
+            =pattern.pattern_author.favorites_count
               
   div.row
     div.col-md-6.mt-5
