@@ -18,7 +18,7 @@ const authPassword = process.env.API_PASSWORD;
 const ravelryApiEndpoint = "https://api.ravelry.com";
 const storeId = process.env.STORE_ID;
 const designerId = process.env.DESIGNER_ID;
-
+const cachePeriod = 1000*60*60*24 // 1 day
 const auth = {
   auth: {    
     username: authUsername,
@@ -93,6 +93,10 @@ async function getPattern(id) {
   const patternPath = `./data/patterns/${id}.json`;
   if (checkFileExists(patternPath)) {
     console.log(patternPath + " exists");
+    var fileAge;
+      const stats = fs.statSync(filepath)
+    fs.stat(patternPath, (err, stat) => fileAge = stat.mtimeMs)
+    console.log(`cache age: ${fileAge}`)
     const pattern = require(patternPath);
     return pattern;
   }
