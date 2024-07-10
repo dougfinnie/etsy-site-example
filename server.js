@@ -1,28 +1,17 @@
-const path = require("path");
+// server.js
+// where your node app starts
 
-const fastify = require("fastify")({
-  // Set this to true for detailed logging:
-  logger: false,
-});
-
-
-// Setup our static files
-fastify.register(require("@fastify/static"), {
-  root: path.join(__dirname, "public"),
-  prefix: "/", // optional: default '/'
-});
-
-// Formbody lets us parse incoming forms
-fastify.register(require("@fastify/formbody"));
-
-// View is a templating manager for fastify
-fastify.register(require("@fastify/view"), {
-  engine: {
-    pug: require("pug"),
-  },
-});
-
+// init project
+var express = require("express");
+var bodyParser = require("body-parser");
+var app = express();
+app.set("view engine", "pug");
+const pug = require("pug");
+app.use(bodyParser.urlencoded({ extended: true }));
 const axios = require('axios');
+
+// /js and /css bootstrap files
+app.use(express.static(__dirname + "/node_modules/bootstrap/dist"));
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
@@ -37,27 +26,30 @@ const auth = {
   }
 };
 
+// http://expressjs.com/en/starter/static-files.html
+app.use(express.static("public"));
+
 // http://expressjs.com/en/starter/basic-routing.html
-fastify.get("/", function(request, response) {
+app.get("/", function(request, response) {
   const designer = require(`./data/designer_${designerId}.json`);
-  response.view("views/index.pug", {
+  response.render("index.pug", {
     name: designer.pattern_author.name,
     title: "Jane Burns Designs",
     featured: designer.featured_bundles,
     about: designer.pattern_author.notes_html
   });
 });
-fastify.get("/designer", function(req, resp) {
+app.get("/designer", function(req, resp) {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
 });
 
-fastify.get("/pattern/:id", async function(req, resp) {
+app.get("/pattern/:id", async function(req, resp) {
   const pattern = await getPattern(req.params.id);
-  resp.view("views/pattern.pug", {
+  resp.render("pattern.pug", {
     pattern: pattern.pattern
   });
 });
-fastify.get("/patterns",async function(req, resp) {
+app.get("/patterns",async function(req, resp) {
   let productsPath = `./data/products/${storeId}.json`;
   if (hasFileCacheExpired(productsPath)) {
     console.log('Product cache expired');
@@ -77,7 +69,7 @@ fastify.get("/patterns",async function(req, resp) {
     }
     return 0;
   });
-  resp.view("views/patterns.pug", {
+  resp.render("patterns.pug", {
     patterns: sorted
   });
 });
@@ -107,7 +99,7 @@ function hasFileCacheExpired(path) {
   return fileAge > cachePeriod;
 }
 
-fastify.get("/products", async function(req, resp) {
+app.get("/products", async function(req, resp) {
   const productsPath = `data/products/${storeId}.json`
   const json = await fetchProducts();
   
@@ -148,14 +140,8 @@ function checkFileExists(file) {
   const fs = require('fs');
   return fs.existsSync(file)
 }
-// Run the server and report out to the logs
-fastify.listen(
-  { port: process.env.PORT, host: "0.0.0.0" },
-  function (err, address) {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
-    console.log(`Your app is listening on ${address}`);
-  }
-);
+
+var listener = app.listen(process.env.PORT, function() {
+  console.log("Your app is listening on port " + listener.address().port);
+});
+

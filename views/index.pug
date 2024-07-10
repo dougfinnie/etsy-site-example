@@ -22,28 +22,17 @@ html
         div.col-md-6.mt-5
           div.card
             h2.card-header.
-              Patterns
+              Featured
+            div#latest.card-body
+              +featured(featured)
+          div.card.mt-5
+            h2.card-header.
+              About this site
             div#latest.card-body
               p This is a demo to run a dynamic website yourself that gets all the information form your Ravelry Store.
               p You will need an API key  (find out more at 
                 a(href="https://www.ravelry.com/pro/developer") https://www.ravelry.com/pro/developer
                 | ) but once you have, you can remix this site and it will work exactly the same but with your information.
-                
-              hr
-              ul
-                li 
-                  a(href="/patterns") All Products
-                li 
-                  a(href="/Designer") Jane Burns
-                li 
-                  a(href="/patterns") Patterns
-                li
-                  a(href="/pattern/537585") Pattern 537585
-          div.card.mt-5
-            h2.card-header.
-              Featured
-            div#latest.card-body
-              +featured(featured)
     footer.container
       span Made with 
       a(href='https://glitch.com') Glitch
