@@ -1,4 +1,4 @@
-mixin about(about)
+mixin about(name, about)
   div.col-md-12.px-0
-    h1.display-4.font-italic About Jane Burns
+    h1.display-4.font-italic= "About " + name
     div.my-3!= about

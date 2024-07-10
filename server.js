@@ -31,10 +31,9 @@ app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
-  // response.sendFile(__dirname + "/views/index.html");
   const designer = require(`./data/designer_${designerId}.json`);
   response.render("index.pug", {
-    designer: "Jane Burns",
+    name: designer.pattern_author.name,
     title: "Jane Burns Designs",
     featured: designer.featured_bundles,
     about: designer.pattern_author.notes_html
@@ -45,9 +44,7 @@ app.get("/designer", function(req, resp) {
 });
 
 app.get("/pattern/:id", async function(req, resp) {
-  // console.log(req.params.id);
   const pattern = await getPattern(req.params.id);
-  // console.log(pattern);
   resp.render("pattern.pug", {
     pattern: pattern.pattern
   });
@@ -55,7 +52,6 @@ app.get("/pattern/:id", async function(req, resp) {
 app.get("/patterns",async function(req, resp) {
   var products = await fetchProducts();
   const patterns = require(`./data/products/${storeId}.json`);
-  // resp.send(patterns.products);
   let sorted = patterns.products.sort((a, b) => {
     let fa = a.title.toLowerCase(),
         fb = b.title.toLowerCase();
@@ -81,9 +77,10 @@ async function getPattern(id) {
     var fileAge;
     const stats = fs.statSync(patternPath);
     fileAge = Date.now() - stats.mtimeMs;
-    console.log(`cache age: ${fileAge}`);
-    console.log(cachePeriod);
     console.log(fileAge > cachePeriod);
+    if (fileAge > cachePeriod) {
+      endif;
+    }
 
     const pattern = require(patternPath);
     return pattern;
@@ -101,16 +98,10 @@ app.get("/products", async function(req, resp) {
   
   const productsPath = `data/products/${storeId}.json`
   await saveJson(productsPath, json);
-  
-  resp.render("products.pug", {
-    products: json
-  });
-//  return json;
 });
 
 async function saveJson(path, json) {
   const fs = require("fs");
-  console.log(json);
   let file = fs.writeFile(path, JSON.stringify(json), err => {
     // Checking for errors
     if (err) throw err; 
