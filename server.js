@@ -108,36 +108,46 @@ async function getPattern(id) {
   const json = await axios.get(url, auth).then(response => {
     return response.data;
   });
-  let file = fs.writeFile(patternPath, JSON.stringify(json), err => {
+  let file = await fs.writeFile(patternPath, JSON.stringify(json), err => {
     // Checking for errors
     if (err) throw err; 
     console.log("Done writing pattern"); // Success
   });
   return json;
 }
+
 app.get("/products", async function(req, resp) {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
   const productsPath = `data/products/${storeId}.json`
   const json = await axios.get(url, auth).then(response => {
     return response.data;
   });
-  const fs = require("fs");
-  let file = fs.writeFile(productsPath, JSON.stringify(json), err => {
-    // Checking for errors
-    if (err) throw err; 
-    console.log("Done writing products"); // Success
-  });
+  
+  await savePattern(json);
+  
   resp.render("products.pug", {
     products: json
   });
 //  return json;
 });
 
-function fetchProducts() {
-  const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
-  const json = axios.get(url, auth).then(response => {
-    return response.data;
+async function savePattern(path, json) {
+  const fs = require("fs");
+  let file = await fs.writeFile(path, JSON.stringify(json), err => {
+    // Checking for errors
+    if (err) throw err; 
+    console.log("Done writing pattern"); // Success
   });
+}
+
+async function fetchProducts() {
+  const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
+  try {
+    const json = await axios.get(url, auth).then(response => {
+    return response.data;
+  } catch (error) {
+      console.log(error);
+    };
   return json;
 }
 
