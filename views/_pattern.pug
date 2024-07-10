@@ -1,6 +1,6 @@
 mixin pattern(pattern)
   div.row
-    div.col-md-6.mt-5
+    div.col-md-8.mt-5
       div.card
         h2.card-header
           = pattern.name
@@ -12,7 +12,7 @@ mixin pattern(pattern)
               img.img-thumbnail(src=photo.square_url)
           br
           != pattern.notes_html
-    div.col-md-6.mt-5
+    div.col-md-4.mt-5
       div.card
         div#latest.card-body
           div
@@ -31,8 +31,6 @@ mixin pattern(pattern)
             | &#11088;
             =pattern.favorites_count
               
-  div.row
-    div.col-md-6.mt-5
       div.card
         h2.card-header
             = "Links"
