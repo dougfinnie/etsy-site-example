@@ -77,13 +77,11 @@ async function getPattern(id) {
     var fileAge;
     const stats = fs.statSync(patternPath);
     fileAge = Date.now() - stats.mtimeMs;
-    console.log(fileAge > cachePeriod);
-    if (fileAge > cachePeriod) {
-      endif;
+    console.log(`outdated cache: ${fileAge > cachePeriod}`);
+    if (fileAge < cachePeriod) {
+      const pattern = require(patternPath);
+      return pattern;
     }
-
-    const pattern = require(patternPath);
-    return pattern;
   }
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
   const json = await fetch(url);
@@ -98,6 +96,7 @@ app.get("/products", async function(req, resp) {
   
   const productsPath = `data/products/${storeId}.json`
   await saveJson(productsPath, json);
+  resp.send("ok");
 });
 
 async function saveJson(path, json) {
