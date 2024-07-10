@@ -39,6 +39,7 @@ app.get("/", function(request, response) {
     about: designer.pattern_author.notes_html
   });
 });
+
 app.get("/designer", function(req, resp) {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
 });
@@ -49,6 +50,7 @@ app.get("/pattern/:id", async function(req, resp) {
     pattern: pattern.pattern
   });
 });
+
 app.get("/patterns",async function(req, resp) {
   let productsPath = `./data/products/${storeId}.json`;
   if (hasFileCacheExpired(productsPath)) {
@@ -73,6 +75,15 @@ app.get("/patterns",async function(req, resp) {
     patterns: sorted
   });
 });
+
+app.get("/products", async function(req, resp) {
+  const productsPath = `data/products/${storeId}.json`
+  const json = await fetchProducts();
+  
+  await saveJson(productsPath, json);
+  resp.send("ok");
+});
+
 async function getPattern(id) {
   const patternPath = `./data/patterns/${id}.json`;
   if (checkFileExists(patternPath)) {
@@ -98,14 +109,6 @@ function hasFileCacheExpired(path) {
   console.log(`outdated cache: ${fileAge > cachePeriod}`);
   return fileAge > cachePeriod;
 }
-
-app.get("/products", async function(req, resp) {
-  const productsPath = `data/products/${storeId}.json`
-  const json = await fetchProducts();
-  
-  await saveJson(productsPath, json);
-  resp.send("ok");
-});
 
 async function saveJson(path, json) {
   const fs = require("fs");
