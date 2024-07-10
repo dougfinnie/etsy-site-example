@@ -1,6 +1,3 @@
-// server.js
-// where your node app starts
-
 // init project
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -50,8 +47,13 @@ app.get("/pattern/:id", async function(req, resp) {
   });
 });
 app.get("/patterns",async function(req, resp) {
-  var products = await fetchProducts();
-  const patterns = require(`./data/products/${storeId}.json`);
+  let productsPath = `./data/products/${storeId}.json`;
+  if (hasFileCacheExpired(productsPath)) {
+    console.log('Product cache expired');
+    await fetchProducts();  
+  }
+
+  const patterns = require(productsPath);
   let sorted = patterns.products.sort((a, b) => {
     let fa = a.title.toLowerCase(),
         fb = b.title.toLowerCase();
@@ -69,16 +71,11 @@ app.get("/patterns",async function(req, resp) {
   });
 });
 async function getPattern(id) {
-  const fs = require("fs");
   const patternPath = `./data/patterns/${id}.json`;
   if (checkFileExists(patternPath)) {
     console.log(patternPath + " exists");
 
-    var fileAge;
-    const stats = fs.statSync(patternPath);
-    fileAge = Date.now() - stats.mtimeMs;
-    console.log(`outdated cache: ${fileAge > cachePeriod}`);
-    if (fileAge < cachePeriod) {
+    if (!hasFileCacheExpired(patternPath)) {
       const pattern = require(patternPath);
       return pattern;
     }
@@ -92,13 +89,17 @@ async function getPattern(id) {
 }
 
 function hasFileCacheExpired(path) {
-  
+  const fs = require("fs");
+  const stats = fs.statSync(path);
+  let fileAge = Date.now() - stats.mtimeMs;
+  console.log(`outdated cache: ${fileAge > cachePeriod}`);
+  return fileAge > cachePeriod;
 }
 
 app.get("/products", async function(req, resp) {
+  const productsPath = `data/products/${storeId}.json`
   const json = await fetchProducts();
   
-  const productsPath = `data/products/${storeId}.json`
   await saveJson(productsPath, json);
   resp.send("ok");
 });
