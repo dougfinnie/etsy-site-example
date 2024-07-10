@@ -143,12 +143,12 @@ async function savePattern(path, json) {
 async function fetchProducts() {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
   try {
-    const json = await axios.get(url, auth).then(response => {
-    return response.data;
+    const json = await axios.get(url, auth);
+    return json.data;
   } catch (error) {
       console.log(error);
+      throw error;
     };
-  return json;
 }
 
 function checkFileExists(file) {
