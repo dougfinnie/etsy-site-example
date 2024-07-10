@@ -34,6 +34,7 @@ app.get("/", function(request, response) {
   // response.sendFile(__dirname + "/views/index.html");
   const designer = require(`./data/designer_${designerId}.json`);
   response.render("index.pug", {
+    designer: "Jane Burns",
     title: "Jane Burns Designs",
     featured: designer.featured_bundles,
     about: designer.pattern_author.notes_html
@@ -41,25 +42,8 @@ app.get("/", function(request, response) {
 });
 app.get("/designer", function(req, resp) {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
-  
-
-  // getAPI(url).then(function (json) {
-  //   const fs = require("fs");
-  //   let file = fs.createWriteStream(`data/designer_${designerId}.json`);
-  //   json.pipe(file);
-  //   json.pipe(resp);
-  //   return json;
-  // });
 });
-// app.get("/loveknitting", function(req, resp) {
-//   const url = ravelryApiEndpoint + "/products/loveknitting/export.json?product_id_list=368294";
-//   https.get(url, opt, function(response) {
-//     // console.log(response);
-//     const fs = require("fs");
-//     let file = fs.createWriteStream(`data/products_${storeId}.json`);
-//     response.pipe(resp);
-//   });
-// });
+
 app.get("/pattern/:id", async function(req, resp) {
   // console.log(req.params.id);
   const pattern = await getPattern(req.params.id);
@@ -107,8 +91,7 @@ async function getPattern(id) {
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
   const json = await fetch(url);
 
-  let file = await saveJson(patternPath, json);
-  console.log("Done writing pattern"); // Success
+  await saveJson(patternPath, json);
 
   return json;
 }
@@ -128,7 +111,6 @@ app.get("/products", async function(req, resp) {
 async function saveJson(path, json) {
   const fs = require("fs");
   console.log(json);
-  return;
   let file = fs.writeFile(path, JSON.stringify(json), err => {
     // Checking for errors
     if (err) throw err; 

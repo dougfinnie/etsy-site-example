@@ -18,6 +18,8 @@ html
     main(class="container")
       div.row
         div.col-md-6.mt-5
+          +about(about)
+        div.col-md-6.mt-5
           div.card
             h2.card-header.
               Patterns
@@ -37,13 +39,11 @@ html
                   a(href="/patterns") Patterns
                 li
                   a(href="/pattern/537585") Pattern 537585
-        div.col-md-6.mt-5
-          div.card
+          div.card.mt-5
             h2.card-header.
               Featured
             div#latest.card-body
               +featured(featured)
-      +about(about)
     footer.container
       span Made with 
       a(href='https://glitch.com') Glitch
