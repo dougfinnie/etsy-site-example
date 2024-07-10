@@ -61,7 +61,7 @@ app.get("/designer", function(req, resp) {
 //   });
 // });
 app.get("/pattern/:id", async function(req, resp) {
-  console.log(req.params.id);
+  // console.log(req.params.id);
   const pattern = await getPattern(req.params.id);
   // console.log(pattern);
   resp.render("pattern.pug", {
@@ -93,10 +93,14 @@ async function getPattern(id) {
   const patternPath = `./data/patterns/${id}.json`;
   if (checkFileExists(patternPath)) {
     console.log(patternPath + " exists");
+
     var fileAge;
-      const stats = fs.statSync(filepath)
-    fs.stat(patternPath, (err, stat) => fileAge = stat.mtimeMs)
-    console.log(`cache age: ${fileAge}`)
+    const stats = fs.statSync(patternPath);
+    fileAge = Date.now() - stats.mtimeMs;
+    console.log(`cache age: ${fileAge}`);
+    console.log(cachePeriod);
+    console.log(fileAge > cachePeriod);
+
     const pattern = require(patternPath);
     return pattern;
   }
