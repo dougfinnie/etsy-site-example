@@ -69,7 +69,7 @@ app.get("/pattern/:id", async function(req, resp) {
   });
 });
 app.get("/patterns",async function(req, resp) {
-  await fetchProducts();
+  var products = await fetchProducts();
   const patterns = require(`./data/products/${storeId}.json`);
   // resp.send(patterns.products);
   let sorted = patterns.products.sort((a, b) => {
@@ -123,7 +123,7 @@ app.get("/products", async function(req, resp) {
     return response.data;
   });
   
-  await savePattern(json);
+  await saveJson(json);
   
   resp.render("products.pug", {
     products: json
@@ -131,9 +131,11 @@ app.get("/products", async function(req, resp) {
 //  return json;
 });
 
-async function savePattern(path, json) {
+async function saveJson(path, json) {
   const fs = require("fs");
-  let file = await fs.writeFile(path, JSON.stringify(json), err => {
+  console.log(json);
+  return;
+  let file = fs.writeFile(path, JSON.stringify(json), err => {
     // Checking for errors
     if (err) throw err; 
     console.log("Done writing pattern"); // Success
@@ -143,12 +145,20 @@ async function savePattern(path, json) {
 async function fetchProducts() {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
   try {
-    const json = await axios.get(url, auth);
+    const json = await fetch(url);
     return json.data;
   } catch (error) {
-      console.log(error);
-      throw error;
+      return null;
     };
+}
+
+async function fetch(url) {
+  try {
+    return await axios.get(url, auth);
+  } catch (error) {
+    console.log(error.toJSON());
+    throw error;
+  }
 }
 
 function checkFileExists(file) {
