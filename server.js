@@ -107,11 +107,9 @@ async function getPattern(id) {
   const url = `${ravelryApiEndpoint}/patterns/${id}.json`;
   const json = await fetch(url);
 
-  let file = await fs.writeFile(patternPath, JSON.stringify(json), err => {
-    // Checking for errors
-    if (err) throw err; 
-    console.log("Done writing pattern"); // Success
-  });
+  let file = await saveJson(patternPath, json);
+  console.log("Done writing pattern"); // Success
+
   return json;
 }
 
@@ -142,7 +140,7 @@ async function fetchProducts() {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
   try {
     const json = await fetch(url);
-    return json.data;
+    return json;
   } catch (error) {
       return null;
     };
@@ -150,7 +148,8 @@ async function fetchProducts() {
 
 async function fetch(url) {
   try {
-    return await axios.get(url, auth);
+    const json = await axios.get(url, auth);
+    return json.data;
   } catch (error) {
     console.log(error.toJSON());
     throw error;
