@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const del = require('del');
+const fs = require('fs');
 
 gulp.task('clean', () => {
      return del([
@@ -29,5 +30,20 @@ gulp.task('jqueryjs', function() {
   return gulp.src(['node_modules/jquery/dist/jquery.min.js',
                   'node_modules/jquery/dist/jquery.min.map'], {allowEmpty:true})
       .pipe(gulp.dest('public/js'));
+});
+gulp.task('data-folders', function() {
+  //TODO fix
+  const folders = [
+      './data/products',
+      './data/patterns'
+    ];
+
+    folders.forEach(dir => {
+        if(!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+            console.log('📁  folder created:', dir);    
+        }   
+    });
+  return;
 });
 gulp.task('default', gulp.series(['clean', 'fonts', 'styles', 'bootstrapcss', 'bootstrapjs', 'jqueryjs']));
