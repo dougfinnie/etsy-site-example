@@ -31,7 +31,7 @@ app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
-  const designer = require(`.data/designer_${designerId}.json`);
+  const designer = require(`./.data/designer_${designerId}.json`);
   response.render("index.pug", {
     name: designer.pattern_author.name,
     title: "Jane Burns Designs",
@@ -40,10 +40,10 @@ app.get("/", function(request, response) {
   });
 });
 
-app.get("/designer", function(req, resp) {
+app.get("/designer", async function(req, resp) {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
   var designer = await fetch(url);
-  await saveJson(`.data/${designerId}`);
+  await saveJson(`.data/designer_${designerId}.json`, designer);
   resp.send('ok');
 });
 
@@ -61,7 +61,7 @@ app.get("/patterns",async function(req, resp) {
     await fetchProducts();  
   }
 
-  const patterns = require(productsPath);
+  const patterns = require(`./${productsPath}`);
   let sorted = patterns.products.sort((a, b) => {
     let fa = a.title.toLowerCase(),
         fb = b.title.toLowerCase();
