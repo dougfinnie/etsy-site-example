@@ -26,12 +26,18 @@ const auth = {
   }
 };
 
+const designerPath = `./data/designer_${designerId}.json`;
+const productsPath = `.data/products/${storeId}.json`
+
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
-  const designer = require(`./.data/designer_${designerId}.json`);
+  if (!checkFileExists(designerPath)) {
+        
+  }
+  const designer = require(`./${designerPath}`);
   response.render("index.pug", {
     name: designer.pattern_author.name,
     title: "Jane Burns Designs",
@@ -46,6 +52,16 @@ app.get("/designer", async function(req, resp) {
   await saveJson(`.data/designer_${designerId}.json`, designer);
   resp.send('ok');
 });
+
+async function getDesigner() {
+  const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
+  try {
+    const json = await fetch(url);
+    return json;
+  } catch (error) {
+      return null;
+    };
+}
 
 app.get("/pattern/:id", async function(req, resp) {
   const pattern = await getPattern(req.params.id);
@@ -80,7 +96,6 @@ app.get("/patterns",async function(req, resp) {
 });
 
 app.get("/products", async function(req, resp) {
-  const productsPath = `.data/products/${storeId}.json`
   const json = await fetchProducts();
   
   await saveJson(productsPath, json);
