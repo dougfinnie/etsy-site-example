@@ -31,7 +31,7 @@ app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function(request, response) {
-  const designer = require(`./data/designer_${designerId}.json`);
+  const designer = require(`.data/designer_${designerId}.json`);
   response.render("index.pug", {
     name: designer.pattern_author.name,
     title: "Jane Burns Designs",
@@ -42,6 +42,9 @@ app.get("/", function(request, response) {
 
 app.get("/designer", function(req, resp) {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
+  var designer = await fetch(url);
+  await saveJson(`.data/${designerId}`);
+  resp.send('ok');
 });
 
 app.get("/pattern/:id", async function(req, resp) {
@@ -52,7 +55,7 @@ app.get("/pattern/:id", async function(req, resp) {
 });
 
 app.get("/patterns",async function(req, resp) {
-  let productsPath = `./data/products/${storeId}.json`;
+  let productsPath = `.data/products/${storeId}.json`;
   if (hasFileCacheExpired(productsPath)) {
     console.log('Product cache expired');
     await fetchProducts();  
@@ -77,7 +80,7 @@ app.get("/patterns",async function(req, resp) {
 });
 
 app.get("/products", async function(req, resp) {
-  const productsPath = `data/products/${storeId}.json`
+  const productsPath = `.data/products/${storeId}.json`
   const json = await fetchProducts();
   
   await saveJson(productsPath, json);
@@ -85,7 +88,7 @@ app.get("/products", async function(req, resp) {
 });
 
 async function getPattern(id) {
-  const patternPath = `./data/patterns/${id}.json`;
+  const patternPath = `.data/patterns/${id}.json`;
   if (checkFileExists(patternPath)) {
     console.log(patternPath + " exists");
 
