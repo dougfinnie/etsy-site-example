@@ -1,4 +1,5 @@
 mixin about(name, about)
   div.col-md-12.px-0
     h1.display-4.font-italic= "About " + name
+    img(src=about.small_photo_url)
     div.my-3!= about
