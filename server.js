@@ -26,7 +26,7 @@ const auth = {
   }
 };
 
-const designerPath = `./data/designer_${designerId}.json`;
+const designerPath = `.data/designer_${designerId}.json`;
 const productsPath = `.data/products/${storeId}.json`
 
 // http://expressjs.com/en/starter/static-files.html
@@ -108,7 +108,7 @@ async function getPattern(id) {
     console.log(patternPath + " exists");
 
     if (!hasFileCacheExpired(patternPath)) {
-      const pattern = require(patternPath);
+      const pattern = require(`./${patternPath}`);
       return pattern;
     }
   }
