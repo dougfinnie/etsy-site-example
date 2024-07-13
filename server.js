@@ -65,25 +65,12 @@ app.get("/patterns",async function(req, resp) {
   }
 
   const patterns = require(`./${productsPath}`);
-//   let sorted = patterns.products.sort((a, b) => {
-//     let fa = a.title.toLowerCase(),
-//         fb = b.title.toLowerCase();
-
-//     if (fa < fb) {
-//         return -1;
-//     }
-//     if (fa > fb) {
-//         return 1;
-//     }
-//     return 0;
-//   });
-  
   let sorted = patterns.products
-                      .sort((a, b) => 
-                            a.title.localeCompare(
-                              b.title,
-                              undefined,
-                              { sensitivity: 'base' }));
+    .sort((a, b) => 
+      a.title.localeCompare(
+        b.title,
+        undefined,
+        { sensitivity: 'base' }));
 
   resp.render("patterns.pug", {
     patterns: sorted,
