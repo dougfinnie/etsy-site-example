@@ -18,6 +18,7 @@ const authPassword = process.env.API_PASSWORD;
 const ravelryApiEndpoint = "https://api.ravelry.com";
 const storeId = process.env.STORE_ID;
 const designerId = process.env.DESIGNER_ID;
+const designerName = process.env.DESIGNER_NAME;
 const cachePeriod = 1000*60*60*24*7 // 1 week
 const auth = {
   auth: {    
@@ -39,7 +40,7 @@ app.get("/", function(request, response) {
   }
   const designer = require(`./${designerPath}`);
   response.render("index.pug", {
-    name: designer.pattern_author.name,
+    name: designerName,
     title: designer.pattern_author.name,
     featured: designer.featured_bundles,
     photo: designer.pattern_author.users[0].photo_url,
@@ -68,7 +69,7 @@ app.get("/pattern/:id", async function(req, resp) {
   const pattern = await getPattern(req.params.id);
   resp.render("pattern.pug", {
     pattern: pattern.pattern,
-    title: pattern.designer + " - " + pattern.pattern.name
+    title: designerName + " - " + pattern.pattern.name
   });
 });
 
@@ -94,7 +95,7 @@ app.get("/patterns",async function(req, resp) {
   });
   resp.render("patterns.pug", {
     patterns: sorted,
-    title: designer.pattern_author.name + " Patterns"
+    title: designerName + " - Patterns"
   });
 });
 
