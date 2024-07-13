@@ -40,8 +40,9 @@ app.get("/", function(request, response) {
   const designer = require(`./${designerPath}`);
   response.render("index.pug", {
     name: designer.pattern_author.name,
-    title: "Jane Burns Designs",
+    title: designer.pattern_author.name,
     featured: designer.featured_bundles,
+    photo: designer.pattern_author.users[0].photo_url,
     about: designer.pattern_author.notes_html
   });
 });
@@ -66,7 +67,8 @@ async function getDesigner() {
 app.get("/pattern/:id", async function(req, resp) {
   const pattern = await getPattern(req.params.id);
   resp.render("pattern.pug", {
-    pattern: pattern.pattern
+    pattern: pattern.pattern,
+    title: pattern.designer + " - " + pattern.pattern.name
   });
 });
 
@@ -91,7 +93,8 @@ app.get("/patterns",async function(req, resp) {
     return 0;
   });
   resp.render("patterns.pug", {
-    patterns: sorted
+    patterns: sorted,
+    title: designer.pattern_author.name + " Patterns"
   });
 });
 
