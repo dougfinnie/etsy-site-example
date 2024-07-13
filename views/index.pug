@@ -40,8 +40,7 @@ html
               ul.list-group
               each site in sites
                 li.list-group-item
-                  =social_site.name
-                  //a(href=site.url)= social_site.name
+                  a(href=site.url, target="new")= site.social_site.name
                     
            
     footer.container

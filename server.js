@@ -35,7 +35,7 @@ app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", async function(request, response) {
-  if (!checkFileExists(designerPath)) {
+  if (!checkFileExists(designerPath) || hasFileCacheExpired(designerPath)) {
         await getDesigner();
   }
   const designer = require(`./${designerPath}`);
@@ -60,6 +60,7 @@ async function getDesigner() {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
   try {
     const json = await fetch(url);
+    await saveJson(designerPath, json);
     return json;
   } catch (error) {
       return null;
