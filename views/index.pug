@@ -33,9 +33,16 @@ html
               p You will need an API key  (find out more at 
                 a(href="https://www.ravelry.com/pro/developer") https://www.ravelry.com/pro/developer
                 | ) but once you have, you can remix this site and it will work exactly the same but with your information.
-        div.card
-           h2.card-header.
-             Socials
+          div.card.mt-5
+            h2.card-header.
+              Socials
+            div#latest.card-body
+              ul.list-group
+              each site in sites
+                li.list-group-item
+                  =social_site.name
+                  //a(href=site.url)= social_site.name
+                    
            
     footer.container
       span Made with 

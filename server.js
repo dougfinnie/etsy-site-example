@@ -34,9 +34,9 @@ const productsPath = `.data/products/${storeId}.json`
 app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function(request, response) {
+app.get("/", async function(request, response) {
   if (!checkFileExists(designerPath)) {
-        
+        await getDesigner();
   }
   const designer = require(`./${designerPath}`);
   response.render("index.pug", {
@@ -44,7 +44,8 @@ app.get("/", function(request, response) {
     title: designer.pattern_author.name,
     featured: designer.featured_bundles,
     photo: designer.pattern_author.users[0].photo_url,
-    about: designer.pattern_author.notes_html
+    about: designer.pattern_author.notes_html,
+    sites: designer.pattern_author.users[0].user_sites
   });
 });
 
