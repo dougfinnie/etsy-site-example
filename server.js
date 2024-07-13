@@ -41,31 +41,13 @@ app.get("/", async function(request, response) {
   const designer = require(`./${designerPath}`);
   response.render("index.pug", {
     name: designerName,
-    title: designer.pattern_author.name,
+    title: designerName,
     featured: designer.featured_bundles,
     photo: designer.pattern_author.users[0].photo_url,
     about: designer.pattern_author.notes_html,
     sites: designer.pattern_author.users[0].user_sites
   });
 });
-
-app.get("/designer", async function(req, resp) {
-  const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
-  var designer = await fetch(url);
-  await saveJson(`.data/designer_${designerId}.json`, designer);
-  resp.send('ok');
-});
-
-async function getDesigner() {
-  const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
-  try {
-    const json = await fetch(url);
-    await saveJson(designerPath, json);
-    return json;
-  } catch (error) {
-      return null;
-    };
-}
 
 app.get("/pattern/:id", async function(req, resp) {
   const pattern = await getPattern(req.params.id);
@@ -83,18 +65,26 @@ app.get("/patterns",async function(req, resp) {
   }
 
   const patterns = require(`./${productsPath}`);
-  let sorted = patterns.products.sort((a, b) => {
-    let fa = a.title.toLowerCase(),
-        fb = b.title.toLowerCase();
+//   let sorted = patterns.products.sort((a, b) => {
+//     let fa = a.title.toLowerCase(),
+//         fb = b.title.toLowerCase();
 
-    if (fa < fb) {
-        return -1;
-    }
-    if (fa > fb) {
-        return 1;
-    }
-    return 0;
-  });
+//     if (fa < fb) {
+//         return -1;
+//     }
+//     if (fa > fb) {
+//         return 1;
+//     }
+//     return 0;
+//   });
+  
+  let sorted = patterns.products
+                      .sort((a, b) => 
+                            a.title.localeCompare(
+                              b.title,
+                              undefined,
+                              { sensitivity: 'base' }));
+
   resp.render("patterns.pug", {
     patterns: sorted,
     title: designerName + " - Patterns"
@@ -106,6 +96,13 @@ app.get("/products", async function(req, resp) {
   
   await saveJson(productsPath, json);
   resp.send("ok");
+});
+
+app.get("/designer", async function(req, resp) {
+  const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
+  var designer = await fetch(url);
+  await saveJson(`.data/designer_${designerId}.json`, designer);
+  resp.send('ok');
 });
 
 async function getPattern(id) {
@@ -124,6 +121,17 @@ async function getPattern(id) {
   await saveJson(patternPath, json);
 
   return json;
+}
+
+async function getDesigner() {
+  const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
+  try {
+    const json = await fetch(url);
+    await saveJson(designerPath, json);
+    return json;
+  } catch (error) {
+      return null;
+    };
 }
 
 function hasFileCacheExpired(path) {
