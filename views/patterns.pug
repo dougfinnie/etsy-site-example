@@ -26,7 +26,8 @@ html
               a(href="pattern/" +pattern.sku.replace('JB-','').replace('EB-',''))
                 = pattern.title
             td
-              img(src=pattern.square_thumbnail_url, alt=pattern.title + " thumbnail")
+              - var imgUrl = pattern.square_thumbnail_url.replace('http://images4.ravelry.com', 'https://images4-g.ravelrycache.com')
+              img(src={imgUrl}, alt=pattern.title + " thumbnail")
             td
               = pattern.pretty_price
           
