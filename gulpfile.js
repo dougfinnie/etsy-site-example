@@ -1,4 +1,4 @@
-const gulp = require('gulp');
+import gulp from 'gulp');
 const del = require('del');
 
 gulp.task('clean', () => {

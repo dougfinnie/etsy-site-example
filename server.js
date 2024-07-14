@@ -2,36 +2,45 @@
  * This is the main Node.js server script for your project
  * Check out the two endpoints this back-end API provides in fastify.get and fastify.post below
  */
-
-const path = require("path");
+import path from "path";
+// const path = require("path");
 
 // Require the fastify framework and instantiate it
-const fastify = require("fastify")({
+import Fastify from 'fastify';
+
+const fastify = Fastify({
   // Set this to true for detailed logging:
   logger: false,
 });
 
 
 // Setup our static files
-fastify.register(require("@fastify/static"), {
+import fastifyStatic from 'fastify-static';
+
+// fastify.register(require("@fastify/static"), {
+fastify.register(fastifyStatic, {
   root: path.join(__dirname, "public"),
   prefix: "/", // optional: default '/'
 });
 
 // Formbody lets us parse incoming forms
-fastify.register(require("@fastify/formbody"));
+import fastifyFormbody from 'fastify-formbody';
+fastify.register(fastifyFormbody);
+// fastify.register(require("@fastify/formbody"));
 
 
 // View is a templating manager for fastify
-fastify.register(require("@fastify/view"), {
+import fastifyView from 'fastify-view';
+// fastify.register(require("@fastify/view"), {
+fastify.register(fastifyView, {
   engine: {
     pug: require("pug"),
   },
   root: './views'
 });
 
-// app.use(bodyParser.urlencoded({ extended: true }));
-const axios = require('axios');
+import axios from 'axios';
+// const axios = require('axios');
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
@@ -57,7 +66,7 @@ fastify.get("/", async (req, reply) => {
   if (!fileExists(designerPath) || hasFileCacheExpired(designerPath)) {
         await getDesigner();
   }
-  const designer = require(`./${designerPath}`);
+  import designer from `./${designerPath}`;
   return reply.viewAsync("index.pug", {
     name: designerName,
     title: designerName,
