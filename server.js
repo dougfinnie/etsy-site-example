@@ -29,7 +29,6 @@ fastify.register(require("@fastify/view"), {
   },
 });
 
-const pug = require("pug");
 // app.use(bodyParser.urlencoded({ extended: true }));
 const axios = require('axios');
 
@@ -53,6 +52,7 @@ const productsPath = `.data/products/${storeId}.json`
 
 // http://expressjs.com/en/starter/basic-routing.html
 fastify.get("/", async function(request, response) {
+  console.log("home");
   if (!checkFileExists(designerPath) || hasFileCacheExpired(designerPath)) {
         await getDesigner();
   }
@@ -69,7 +69,7 @@ fastify.get("/", async function(request, response) {
 
 fastify.get("/pattern/:id", async function(req, resp) {
   const pattern = await getPattern(req.params.id);
-  resp.render("pattern.pug", {
+  resp.view("pattern.pug", {
     pattern: pattern.pattern,
     title: designerName + " - " + pattern.pattern.name
   });
@@ -90,7 +90,7 @@ fastify.get("/patterns",async function(req, resp) {
         undefined,
         { sensitivity: 'base' }));
 
-  resp.render("patterns.pug", {
+  resp.view("patterns.pug", {
     patterns: sorted,
     title: designerName + " - Patterns"
   });
