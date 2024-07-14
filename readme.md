@@ -13,11 +13,12 @@ Links to Products (Patterns) is funky and could do with more work.
 # Tech stack
 * node (latest Glitch allows)
 * fastify web framework
-* PugJS for templating
+* Pug for templating
 * Bootstrap for style
 * jQuery and DataTables for interactive Patterns list
 * Gulp for build and folder structure
 * Ravelry NPM library simplifies auth and access
 
 # TODO
-Currently the asset and header image are hard coded.
+* Currently the asset and header image are hard coded.
+* update del to 7? Currently 7 only supports modules
