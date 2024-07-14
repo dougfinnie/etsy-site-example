@@ -1,8 +1,3 @@
-/**
- * This is the main Node.js server script for your project
- * Check out the two endpoints this back-end API provides in fastify.get and fastify.post below
- */
-
 const path = require("path");
 
 // Require the fastify framework and instantiate it
@@ -16,9 +11,6 @@ fastify.register(require("@fastify/static"), {
   root: path.join(__dirname, "public"),
   prefix: "/", // optional: default '/'
 });
-
-// Formbody lets us parse incoming forms
-fastify.register(require("@fastify/formbody"));
 
 // View is a templating manager for fastify
 fastify.register(require("@fastify/view"), {

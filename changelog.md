@@ -1,5 +1,6 @@
 # Changes
-* swapped express out for netlify
+* replaced express with fastify
 * added jQuery DataTables for product view
 * filter products that have no saleable items
-* add thumbnail and price to patterns
+* added thumbnail and price to patterns
+* GNU Terry Pratchett
