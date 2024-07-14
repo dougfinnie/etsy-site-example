@@ -1,17 +1,37 @@
-// server.js
-// where your node app starts
+/**
+ * This is the main Node.js server script for your project
+ * Check out the two endpoints this back-end API provides in fastify.get and fastify.post below
+ */
 
-// init project
-var express = require("express");
-var bodyParser = require("body-parser");
-var app = express();
-app.set("view engine", "pug");
+const path = require("path");
+
+// Require the fastify framework and instantiate it
+const fastify = require("fastify")({
+  // Set this to true for detailed logging:
+  logger: false,
+});
+
+
+// Setup our static files
+fastify.register(require("@fastify/static"), {
+  root: path.join(__dirname, "public"),
+  prefix: "/", // optional: default '/'
+});
+
+// Formbody lets us parse incoming forms
+fastify.register(require("@fastify/formbody"));
+
+
+// View is a templating manager for fastify
+fastify.register(require("@fastify/view"), {
+  engine: {
+    pug: require("pug"),
+  },
+});
+
 const pug = require("pug");
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 const axios = require('axios');
-
-// /js and /css bootstrap files
-app.use(express.static(__dirname + "/node_modules/bootstrap/dist"));
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
@@ -30,16 +50,14 @@ const auth = {
 const designerPath = `.data/designer_${designerId}.json`;
 const productsPath = `.data/products/${storeId}.json`
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", async function(request, response) {
+fastify.get("/", async function(request, response) {
   if (!checkFileExists(designerPath) || hasFileCacheExpired(designerPath)) {
         await getDesigner();
   }
   const designer = require(`./${designerPath}`);
-  response.render("index.pug", {
+  response.view("index.pug", {
     name: designerName,
     title: designerName,
     featured: designer.featured_bundles,
@@ -49,7 +67,7 @@ app.get("/", async function(request, response) {
   });
 });
 
-app.get("/pattern/:id", async function(req, resp) {
+fastify.get("/pattern/:id", async function(req, resp) {
   const pattern = await getPattern(req.params.id);
   resp.render("pattern.pug", {
     pattern: pattern.pattern,
@@ -57,7 +75,7 @@ app.get("/pattern/:id", async function(req, resp) {
   });
 });
 
-app.get("/patterns",async function(req, resp) {
+fastify.get("/patterns",async function(req, resp) {
   let productsPath = `.data/products/${storeId}.json`;
   if (hasFileCacheExpired(productsPath)) {
     console.log('Product cache expired');
@@ -78,14 +96,14 @@ app.get("/patterns",async function(req, resp) {
   });
 });
 
-app.get("/products", async function(req, resp) {
+fastify.get("/products", async function(req, resp) {
   const json = await fetchProducts();
   
   await saveJson(productsPath, json);
   resp.send("ok");
 });
 
-app.get("/designer", async function(req, resp) {
+fastify.get("/designer", async function(req, resp) {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
   var designer = await fetch(url);
   await saveJson(`.data/designer_${designerId}.json`, designer);
@@ -163,7 +181,15 @@ function checkFileExists(file) {
   return fs.existsSync(file)
 }
 
-var listener = app.listen(process.env.PORT, function() {
-  console.log("Your app is listening on port " + listener.address().port);
-});
+// Run the server and report out to the logs
+fastify.listen(
+  { port: process.env.PORT, host: "0.0.0.0" },
+  function (err, address) {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Your app is listening on ${address}`);
+  }
+);
 
