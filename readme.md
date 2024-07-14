@@ -12,9 +12,10 @@ Links to Products (Patterns) is funky and could do with more work.
 
 # Tech stack
 * node (latest Glitch allows)
-* express (looking to replace with Fastify)
+* fastify web framework
 * PugJS for templating
 * Bootstrap for style
+* jQuery and DataTables for interactive Patterns list
 * Gulp for build and folder structure
 * Ravelry NPM library simplifies auth and access
 
