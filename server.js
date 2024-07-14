@@ -27,6 +27,7 @@ fastify.register(require("@fastify/view"), {
   engine: {
     pug: require("pug"),
   },
+  root: './views'
 });
 
 // app.use(bodyParser.urlencoded({ extended: true }));
@@ -51,13 +52,13 @@ const productsPath = `.data/products/${storeId}.json`
 
 
 // http://expressjs.com/en/starter/basic-routing.html
-fastify.get("/", async function(request, response) {
+fastify.get("/", async (req, reply) => {
   console.log("home");
   if (!checkFileExists(designerPath) || hasFileCacheExpired(designerPath)) {
         await getDesigner();
   }
   const designer = require(`./${designerPath}`);
-  response.view("index.pug", {
+  return reply.viewAsync("index.pug", {
     name: designerName,
     title: designerName,
     featured: designer.featured_bundles,
@@ -67,15 +68,15 @@ fastify.get("/", async function(request, response) {
   });
 });
 
-fastify.get("/pattern/:id", async function(req, resp) {
+fastify.get("/pattern/:id", async (req, reply) => {
   const pattern = await getPattern(req.params.id);
-  resp.view("pattern.pug", {
+  return reply.viewAsync("pattern.pug", {
     pattern: pattern.pattern,
     title: designerName + " - " + pattern.pattern.name
   });
 });
 
-fastify.get("/patterns",async function(req, resp) {
+fastify.get("/patterns",async (req, reply) => {
   let productsPath = `.data/products/${storeId}.json`;
   if (hasFileCacheExpired(productsPath)) {
     console.log('Product cache expired');
@@ -90,24 +91,24 @@ fastify.get("/patterns",async function(req, resp) {
         undefined,
         { sensitivity: 'base' }));
 
-  resp.view("patterns.pug", {
+  return reply.viewAsync("patterns.pug", {
     patterns: sorted,
     title: designerName + " - Patterns"
   });
 });
 
-fastify.get("/products", async function(req, resp) {
+fastify.get("/products", async (req, reply) => {
   const json = await fetchProducts();
   
   await saveJson(productsPath, json);
-  resp.send("ok");
+  return reply.send("ok");
 });
 
-fastify.get("/designer", async function(req, resp) {
+fastify.get("/designer", async (req, reply) => {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
   var designer = await fetch(url);
   await saveJson(`.data/designer_${designerId}.json`, designer);
-  resp.send('ok');
+  return reply.send('ok');
 });
 
 async function getPattern(id) {
@@ -139,23 +140,6 @@ async function getDesigner() {
     };
 }
 
-function hasFileCacheExpired(path) {
-  const fs = require("fs");
-  const stats = fs.statSync(path);
-  let fileAge = Date.now() - stats.mtimeMs;
-  console.log(`outdated cache: ${fileAge > cachePeriod}`);
-  return fileAge > cachePeriod;
-}
-
-async function saveJson(path, json) {
-  const fs = require("fs");
-  let file = fs.writeFile(path, JSON.stringify(json), err => {
-    // Checking for errors
-    if (err) throw err; 
-    console.log("Done writing pattern"); // Success
-  });
-}
-
 async function fetchProducts() {
   const url = `${ravelryApiEndpoint}/stores/${storeId}/products.json`;
   try {
@@ -176,9 +160,26 @@ async function fetch(url) {
   }
 }
 
-function checkFileExists(file) {
+function hasFileCacheExpired(path) {
+  const fs = require("fs");
+  const stats = fs.statSync(path);
+  let fileAge = Date.now() - stats.mtimeMs;
+  console.log(`outdated cache: ${fileAge > cachePeriod}`);
+  return fileAge > cachePeriod;
+}
+
+async function saveJson(path, json) {
+  const fs = require("fs");
+  let file = fs.writeFile(path, JSON.stringify(json), err => {
+    // Checking for errors
+    if (err) throw err; 
+    console.log("Done writing pattern"); // Success
+  });
+}
+
+async function checkFileExists(file) {
   const fs = require('fs');
-  return fs.existsSync(file)
+  return await fs.exists(file)
 }
 
 // Run the server and report out to the logs
