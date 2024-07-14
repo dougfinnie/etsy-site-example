@@ -17,10 +17,14 @@ gulp.task('bootstrapjs', function() {
                   'node_modules/bootstrap/dist/js/bootstrap.min.js.map'], {allowEmpty:true})
       .pipe(gulp.dest('public/js'));
 });
+gulp.task('datatables', function() {
+  return gulp.src('node_modules/datatables.net/js/dataTables.min.js', {allowEmpty:true})
+    .pipe(gulp.dest('public/js'));
+});
 gulp.task('data-folders', function() {
   return gulp.src('*.*', {read: false})
         .pipe(gulp.dest('./data')) // this exists by default, but just in case
         .pipe(gulp.dest('./data/products'))
         .pipe(gulp.dest('./data/patterns'));
 });
-gulp.task('default', gulp.series(['clean', 'bootstrapcss', 'bootstrapjs', 'data-folders']));
+gulp.task('default', gulp.series(['clean', 'bootstrapcss', 'bootstrapjs', 'data-folders', 'datatables']));
