@@ -18,11 +18,17 @@ html
       table#patternsTable.table.table-striped
         thead
           th Pattern
+          th
+          th Price
         each pattern in patterns
           tr
             td
               a(href="pattern/" +pattern.sku.replace('JB-','').replace('EB-',''))
                 = pattern.title
+            td
+              img(src=pattern.square_thumbnail_url, alt=pattern.title + " thumbnail")
+            td
+              = pattern.pretty_price
           
     footer.container
       span Made with 
