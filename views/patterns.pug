@@ -21,13 +21,14 @@ html
           th
           th Price
         each pattern in patterns
+          - var sku = pattern.sku.replace('JB-','').replace('EB-','')
+          - var imgUrl = (pattern.square_thumbnail_url + "").replace('http://images4.ravelry.com', 'https://images4-g.ravelrycache.com')
           tr
             td
-              a(href="pattern/" +pattern.sku.replace('JB-','').replace('EB-',''))
+              a(href="pattern/" +sku)
                 = pattern.title
             td
-              - var imgUrl = pattern.square_thumbnail_url.replace('http://images4.ravelry.com', 'https://images4-g.ravelrycache.com')
-              img(src={imgUrl}, alt=pattern.title + " thumbnail")
+              img(src=imgUrl, alt=pattern.title + " thumbnail")
             td
               = pattern.pretty_price
           

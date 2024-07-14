@@ -92,7 +92,7 @@ fastify.get("/patterns",async (req, reply) => {
         { sensitivity: 'base' }));
 
   return reply.viewAsync("patterns.pug", {
-    patterns: sorted,
+    patterns: sorted.filter((pattern) => pattern.saleables.length > 0),
     title: designerName + " - Patterns"
   });
 });
