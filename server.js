@@ -28,6 +28,15 @@ fastify.register(require("@fastify/view"), {
   root: "./views",
 });
 
+/**
+ * Registering an `onSend` hook in the root encapsulation context.
+ */
+fastify.addHook("onSend", async function (request, reply) {
+	reply.headers({
+		"x-clacks-overhead": "GNU Terry Pratchett"
+	});
+});
+
 // app.use(bodyParser.urlencoded({ extended: true }));
 const axios = require("axios");
 
