@@ -15,10 +15,10 @@ html
     +nav('patterns')
     main(class="container")
       h2 Patterns
-      div
-        ul.list-group
-          each pattern in patterns
-            li.list-group-item
+      table#patternTable.table.table-striped
+        each pattern in patterns
+          tr
+            td
               a(href="pattern/" +pattern.sku.replace('JB-','').replace('EB-',''))
                 = pattern.title
           
