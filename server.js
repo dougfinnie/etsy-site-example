@@ -54,7 +54,7 @@ const productsPath = `.data/products/${storeId}.json`
 // http://expressjs.com/en/starter/basic-routing.html
 fastify.get("/", async (req, reply) => {
   console.log("home");
-  if (!checkFileExists(designerPath) || hasFileCacheExpired(designerPath)) {
+  if (!fileExists(designerPath) || hasFileCacheExpired(designerPath)) {
         await getDesigner();
   }
   const designer = require(`./${designerPath}`);
@@ -113,7 +113,7 @@ fastify.get("/designer", async (req, reply) => {
 
 async function getPattern(id) {
   const patternPath = `.data/patterns/${id}.json`;
-  if (checkFileExists(patternPath)) {
+  if (fileExists(patternPath)) {
     console.log(patternPath + " exists");
 
     if (!hasFileCacheExpired(patternPath)) {
@@ -177,9 +177,9 @@ async function saveJson(path, json) {
   });
 }
 
-async function checkFileExists(file) {
+function fileExists(file) {
   const fs = require('fs');
-  return await fs.exists(file)
+  return fs.existsSync(file)
 }
 
 // Run the server and report out to the logs
