@@ -5,11 +5,11 @@
   "name": "ravelry-api-demo",
   "version": "0.0.1",
   "description": "Node Express running Pug, queries the Ravelry API",
-  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "npm run build && node server.js",
-    "build": "gulp"
+    "build": "gulp",
+    "watch": "node --watch server.js"
   },
   "dependencies": {
     "fastify": "^4.28.1",

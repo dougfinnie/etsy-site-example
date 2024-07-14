@@ -2,45 +2,34 @@
  * This is the main Node.js server script for your project
  * Check out the two endpoints this back-end API provides in fastify.get and fastify.post below
  */
-import path from "path";
-// const path = require("path");
+
+const path = require("path");
 
 // Require the fastify framework and instantiate it
-import Fastify from 'fastify';
-
-const fastify = Fastify({
+const fastify = require("fastify")({
   // Set this to true for detailed logging:
   logger: false,
 });
 
-
 // Setup our static files
-import fastifyStatic from '@fastify/static';
-
-// fastify.register(require("@fastify/static"), {
-fastify.register(fastifyStatic, {
+fastify.register(require("@fastify/static"), {
   root: path.join(__dirname, "public"),
   prefix: "/", // optional: default '/'
 });
 
 // Formbody lets us parse incoming forms
-import fastifyFormbody from '@fastify/formbody';
-fastify.register(fastifyFormbody);
-// fastify.register(require("@fastify/formbody"));
-
+fastify.register(require("@fastify/formbody"));
 
 // View is a templating manager for fastify
-import fastifyView from '@fastify/view';
-// fastify.register(require("@fastify/view"), {
-fastify.register(fastifyView, {
+fastify.register(require("@fastify/view"), {
   engine: {
     pug: require("pug"),
   },
-  root: './views'
+  root: "./views",
 });
 
-import axios from 'axios';
-// const axios = require('axios');
+// app.use(bodyParser.urlencoded({ extended: true }));
+const axios = require("axios");
 
 const authUsername = process.env.API_KEY;
 const authPassword = process.env.API_PASSWORD;
@@ -48,33 +37,31 @@ const ravelryApiEndpoint = "https://api.ravelry.com";
 const storeId = process.env.STORE_ID;
 const designerId = process.env.DESIGNER_ID;
 const designerName = process.env.DESIGNER_NAME;
-const cachePeriod = 1000*60*60*24*7 // 1 week
+const cachePeriod = 1000 * 60 * 60 * 24 * 7; // 1 week
 const auth = {
-  auth: {    
+  auth: {
     username: authUsername,
-    password: authPassword
-  }
+    password: authPassword,
+  },
 };
 
 const designerPath = `.data/designer_${designerId}.json`;
-const productsPath = `.data/products/${storeId}.json`
-
+const productsPath = `.data/products/${storeId}.json`;
 
 // http://expressjs.com/en/starter/basic-routing.html
 fastify.get("/", async (req, reply) => {
   console.log("home");
   if (!fileExists(designerPath) || hasFileCacheExpired(designerPath)) {
-        await getDesigner();
+    await getDesigner();
   }
-
-  let designer = import(`./${designerPath}`);
+  const designer = require(`./${designerPath}`);
   return reply.viewAsync("index.pug", {
     name: designerName,
     title: designerName,
     featured: designer.featured_bundles,
     photo: designer.pattern_author.users[0].photo_url,
     about: designer.pattern_author.notes_html,
-    sites: designer.pattern_author.users[0].user_sites
+    sites: designer.pattern_author.users[0].user_sites,
   });
 });
 
@@ -82,34 +69,31 @@ fastify.get("/pattern/:id", async (req, reply) => {
   const pattern = await getPattern(req.params.id);
   return reply.viewAsync("pattern.pug", {
     pattern: pattern.pattern,
-    title: designerName + " - " + pattern.pattern.name
+    title: designerName + " - " + pattern.pattern.name,
   });
 });
 
-fastify.get("/patterns",async (req, reply) => {
+fastify.get("/patterns", async (req, reply) => {
   let productsPath = `.data/products/${storeId}.json`;
   if (hasFileCacheExpired(productsPath)) {
-    console.log('Product cache expired');
-    await fetchProducts();  
+    console.log("Product cache expired");
+    await fetchProducts();
   }
 
   const patterns = require(`./${productsPath}`);
-  let sorted = patterns.products
-    .sort((a, b) => 
-      a.title.localeCompare(
-        b.title,
-        undefined,
-        { sensitivity: 'base' }));
+  let sorted = patterns.products.sort((a, b) =>
+    a.title.localeCompare(b.title, undefined, { sensitivity: "base" })
+  );
 
   return reply.viewAsync("patterns.pug", {
     patterns: sorted.filter((pattern) => pattern.saleables.length > 0),
-    title: designerName + " - Patterns"
+    title: designerName + " - Patterns",
   });
 });
 
 fastify.get("/products", async (req, reply) => {
   const json = await fetchProducts();
-  
+
   await saveJson(productsPath, json);
   return reply.send("ok");
 });
@@ -118,7 +102,7 @@ fastify.get("/designer", async (req, reply) => {
   const url = `${ravelryApiEndpoint}/designers/${designerId}.json?include=featured_bundles`;
   var designer = await fetch(url);
   await saveJson(`.data/designer_${designerId}.json`, designer);
-  return reply.send('ok');
+  return reply.send("ok");
 });
 
 async function getPattern(id) {
@@ -146,8 +130,8 @@ async function getDesigner() {
     await saveJson(designerPath, json);
     return json;
   } catch (error) {
-      return null;
-    };
+    return null;
+  }
 }
 
 async function fetchProducts() {
@@ -156,8 +140,8 @@ async function fetchProducts() {
     const json = await fetch(url);
     return json;
   } catch (error) {
-      return null;
-    };
+    return null;
+  }
 }
 
 async function fetch(url) {
@@ -180,16 +164,16 @@ function hasFileCacheExpired(path) {
 
 async function saveJson(path, json) {
   const fs = require("fs");
-  let file = fs.writeFile(path, JSON.stringify(json), err => {
+  let file = fs.writeFile(path, JSON.stringify(json), (err) => {
     // Checking for errors
-    if (err) throw err; 
+    if (err) throw err;
     console.log("Done writing pattern"); // Success
   });
 }
 
 function fileExists(file) {
-  const fs = require('fs');
-  return fs.existsSync(file)
+  const fs = require("fs");
+  return fs.existsSync(file);
 }
 
 // Run the server and report out to the logs
@@ -203,4 +187,3 @@ fastify.listen(
     console.log(`Your app is listening on ${address}`);
   }
 );
-
