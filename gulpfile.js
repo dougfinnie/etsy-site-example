@@ -17,14 +17,31 @@ gulp.task('bootstrapjs', function() {
                   'node_modules/bootstrap/dist/js/bootstrap.min.js.map'], {allowEmpty:true})
       .pipe(gulp.dest('public/js'));
 });
-gulp.task('datatables', function() {
-  return gulp.src('node_modules/datatables.net/js/dataTables.min.js', {allowEmpty:true})
+gulp.task('datatablesjs', function() {
+  return gulp.src(['node_modules/datatables.net/js/dataTables.min.js',
+                  'node_modules/datatables.net-bs5/js/dataTables.bootstrap5.min.js'], {allowEmpty:true})
     .pipe(gulp.dest('public/js'));
 });
+gulp.task('datatablescss', function() {
+  return gulp.src('node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css', {allowEmpty:true})
+      .pipe(gulp.dest('public/css'));
+});
+gulp.task('jquery', function() {
+  return gulp.src('node_modules/jquery/dist/jquery.min.js', {allowEmpty:true})
+    .pipe(gulp.dest('public/js'));
+});
+
 gulp.task('data-folders', function() {
   return gulp.src('*.*', {read: false})
         .pipe(gulp.dest('./data')) // this exists by default, but just in case
         .pipe(gulp.dest('./data/products'))
         .pipe(gulp.dest('./data/patterns'));
 });
-gulp.task('default', gulp.series(['clean', 'bootstrapcss', 'bootstrapjs', 'data-folders', 'datatables']));
+gulp.task('default', gulp.series(['clean',
+                                  'bootstrapcss',
+                                  'bootstrapjs',
+                                  'data-folders',
+                                  'datatablesjs',
+                                  'datatablescss',
+                                  'jquery'
+                                 ]));
