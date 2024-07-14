@@ -15,7 +15,7 @@ const fastify = Fastify({
 
 
 // Setup our static files
-import fastifyStatic from 'fastify-static';
+import fastifyStatic from '@fastify/static';
 
 // fastify.register(require("@fastify/static"), {
 fastify.register(fastifyStatic, {
@@ -24,13 +24,13 @@ fastify.register(fastifyStatic, {
 });
 
 // Formbody lets us parse incoming forms
-import fastifyFormbody from 'fastify-formbody';
+import fastifyFormbody from '@fastify/formbody';
 fastify.register(fastifyFormbody);
 // fastify.register(require("@fastify/formbody"));
 
 
 // View is a templating manager for fastify
-import fastifyView from 'fastify-view';
+import fastifyView from '@fastify/view';
 // fastify.register(require("@fastify/view"), {
 fastify.register(fastifyView, {
   engine: {
@@ -66,7 +66,8 @@ fastify.get("/", async (req, reply) => {
   if (!fileExists(designerPath) || hasFileCacheExpired(designerPath)) {
         await getDesigner();
   }
-  import designer from `./${designerPath}`;
+
+  let designer = import(`./${designerPath}`);
   return reply.viewAsync("index.pug", {
     name: designerName,
     title: designerName,
