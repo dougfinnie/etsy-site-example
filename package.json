@@ -23,7 +23,8 @@
     "jquery": "^3.7.1",
     "fontawesome": "^5.6.3",
     "datatables.net-bs5": "^2.0.8",
-    "datatables.net": "^2.0.8"
+    "datatables.net": "^2.0.8",
+    "esm": "^3.2.25"
   },
   "devDependencies": {},
   "engines": {

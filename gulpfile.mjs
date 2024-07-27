@@ -1,5 +1,6 @@
-const gulp = require("gulp");
-const del = require("del");
+import gulp from "gulp";
+const { series, parallel, src, dest, task } = gulp;
+import del from "del";
 
 gulp.task("clean", () => {
   return del([
@@ -62,13 +63,14 @@ gulp.task("data-folders", function () {
 });
 gulp.task(
   "default",
-  gulp.series([
+  gulp.series(
     "clean",
-    "bootstrapcss",
-    "bootstrapjs",
-    "data-folders",
-    "datatablesjs",
-    "datatablescss",
-    "jquery",
-  ])
+    gulp.parallel(
+      "bootstrapcss",
+      "bootstrapjs",
+      "data-folders",
+      "datatablesjs",
+      "datatablescss",
+      "jquery")
+  )
 );
