@@ -1,9 +1,9 @@
 import gulp from "gulp";
 const { series, parallel, src, dest, task } = gulp;
-import del from "del";
+import { deleteAsync } from "del";
 
-gulp.task("clean", () => {
-  return del([
+gulp.task("clean", async () => {
+  return await deleteAsync([
     "public/fonts/**",
     "!public/fonts",
     "public/css/**",
