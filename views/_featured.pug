@@ -1,7 +1,8 @@
-mixin featured(patterns)
+mixin featured(products)
   ul.list-group
-    each pattern in patterns
+    each product in products
       li.list-group-item
-        img.img-thumbnail(src=pattern.first_photo.square_url) 
-        a(href="https://www.ravelry.com/bundles/" + pattern.id)= pattern.name
+        if product.square_thumbnail_url
+          img.img-thumbnail(src=product.square_thumbnail_url, style="max-width: 80px; height: auto;") 
+        a(href="product/" + product.handle)= product.title
   

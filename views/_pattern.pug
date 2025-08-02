@@ -1,45 +1,63 @@
-mixin pattern(pattern)
+mixin pattern(product)
   div.row
     div.col-md-8.mt-5
       div.card
         h2.card-header
-          = pattern.name
+          = product.title
         div#latest.card-body
-          each photo, index in pattern.photos
-            if index == 0
-              img.img-fluid(src=photo.shelved_url)
-            else
-              img.img-thumbnail(src=photo.square_url)
+          if product.images && product.images.edges && product.images.edges.length > 0
+            each image in product.images.edges
+              img.img-fluid(src=image.node.url, alt=image.node.altText, style="max-width: 100%; margin-bottom: 10px;")
+          else if product.square_thumbnail_url
+            img.img-fluid(src=product.square_thumbnail_url, alt=product.title)
           br
-          != pattern.notes_html
+          if product.descriptionHtml
+            != product.descriptionHtml
+          else if product.description
+            p= product.description
+          else
+            p No description available
     div.col-md-4.mt-5
       div.card
         div#latest.card-body
           div
-            p
-              strong= pattern.sizes_available
-            ul
-              each yarn in pattern.packs
-                li= yarn.yarn_name
-            ul
-              each needle in pattern.pattern_needle_sizes
-                li= needle.name
-            each tag in pattern.pattern_attributes
-              span.badge.rounded-pill.bg-secondary
-                = tag.permalink
-            br
-            | &#11088;
-            =pattern.favorites_count
+            if product.productType
+              p
+                strong Product Type: 
+                = product.productType
+            if product.vendor
+              p
+                strong Vendor: 
+                = product.vendor
+            if product.tags && product.tags.length > 0
+              p
+                strong Tags:
+                br
+                each tag in product.tags
+                  span.badge.rounded-pill.bg-secondary.me-1
+                    = tag
+            if product.priceRange
+              p
+                strong Price: 
+                = product.priceRange.minVariantPrice.currencyCode + " " + product.priceRange.minVariantPrice.amount
+            if product.availableForSale
+              p.text-success Available for Sale
+            else
+              p.text-danger Out of Stock
               
-      div.card
-        h2.card-header
-            = "Links"
-        div#links.card-body
-          div
-            a(href=pattern.download_location.url)
-              ="Buy here"
-            ul Also seen at:
-              each source in pattern.printings
-                li
-                  a(href=source.pattern_source.url)
-                    =source.pattern_source.name
+      if product.variants && product.variants.edges && product.variants.edges.length > 0
+        div.card
+          h2.card-header
+              = "Variants"
+          div#variants.card-body
+            div
+              each variant in product.variants.edges
+                div.mb-2
+                  p
+                    strong= variant.node.title
+                    br
+                    = variant.node.price.currencyCode + " " + variant.node.price.amount
+                    if variant.node.availableForSale
+                      span.badge.bg-success.ms-2 Available
+                    else
+                      span.badge.bg-danger.ms-2 Out of Stock
