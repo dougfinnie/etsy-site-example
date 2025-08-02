@@ -327,7 +327,7 @@ async function fetchProducts() {
       return {
         ...product,
         // Add fields for template compatibility
-        sku: product.handle,
+        sku: variant?.sku || product.handle, // Use variant SKU if available, fallback to handle
         title: product.title,
         pretty_price: variant ? `${variant.price.currencyCode} ${variant.price.amount}` : 'N/A',
         square_thumbnail_url: image?.url || '',

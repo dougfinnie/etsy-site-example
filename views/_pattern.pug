@@ -29,6 +29,10 @@ mixin pattern(product)
               p
                 strong Vendor: 
                 = product.vendor
+            if product.sku
+              p
+                strong SKU: 
+                = product.sku
             if product.tags && product.tags.length > 0
               p
                 strong Tags:
@@ -55,6 +59,9 @@ mixin pattern(product)
                 div.mb-2
                   p
                     strong= variant.node.title
+                    if variant.node.sku
+                      br
+                      small.text-muted SKU: #{variant.node.sku}
                     br
                     = variant.node.price.currencyCode + " " + variant.node.price.amount
                     if variant.node.availableForSale
