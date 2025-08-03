@@ -4,7 +4,12 @@
       "Bash(mkdir:*)",
       "Bash(npm install)",
       "Bash(node analyze-skus.js)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "WebFetch(domain:developer.etsy.com)",
+      "WebFetch(domain:www.etsy.com)",
+      "WebFetch(domain:developers.etsy.com)",
+      "Bash(git remote rename:*)",
+      "Bash(git remote add:*)"
     ],
     "deny": []
   }
