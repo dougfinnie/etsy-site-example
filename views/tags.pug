@@ -1,0 +1,31 @@
+include _nav
+doctype html
+html
+  head
+    title #{title}
+    include _commonmeta.pug
+    include _bootstrap.pug
+  body
+    header
+      div.mt-5.text-center
+        img(src="https://cdn.glitch.com/29d57bd2-6ac1-4702-9368-3907c36bd191%2Fjaneburnsheader.png?v=1587509724660")
+    h1.visually-hidden Browse by Tags
+    +nav('tags')
+    main(class="container")
+      h2 Browse by Tags
+      div.row
+        div.col-12
+          p.text-muted Click on any tag below to see all products with that tag.
+          div.tag-cloud.mt-4
+            each tagInfo in tags
+              - var fontSize = Math.max(12, Math.min(24, 12 + (tagInfo.count * 2)));
+              a.tag-link.me-2.mb-2.d-inline-block(
+                href=`/tags/${encodeURIComponent(tagInfo.tag)}`,
+                style=`font-size: ${fontSize}px; text-decoration: none; color: #007bff; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px; background-color: #f8f9fa;`
+                onmouseover="this.style.backgroundColor='#e9ecef'"
+                onmouseout="this.style.backgroundColor='#f8f9fa'"
+              )
+                = tagInfo.tag
+                small.text-muted.ms-1 (#{tagInfo.count})
+    footer.container
+      span &copy; Doug &amp; Jane Finnie 2025

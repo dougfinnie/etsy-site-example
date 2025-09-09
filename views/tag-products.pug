@@ -1,0 +1,46 @@
+include _nav
+doctype html
+html
+  head
+    title #{title}
+    include _commonmeta.pug
+    include _bootstrap.pug
+    include _datatables.pug
+  body
+    header
+      div.mt-5.text-center
+        img(src="https://cdn.glitch.com/29d57bd2-6ac1-4702-9368-3907c36bd191%2Fjaneburnsheader.png?v=1587509724660")
+    h1.visually-hidden Products
+    +nav('products')
+    main(class="container")
+      div.d-flex.justify-content-between.align-items-center.mb-3
+        h2 Products tagged with "#{tag}"
+        a.btn.btn-outline-secondary.btn-sm(href="/tags") ← Browse all tags
+      if patterns && patterns.length > 0
+        table#patternsTable.table.table-striped
+          thead
+            th Product
+            th
+            th Price
+          each pattern in patterns
+            - var imgUrl = pattern.square_thumbnail_url || ''
+            tr
+              td
+                a(href="product/" + pattern.handle)
+                  = pattern.title
+              td
+                if imgUrl
+                  img(src=imgUrl, alt=pattern.title + " thumbnail", style="max-width: 100px; height: auto;")
+                else
+                  span No image
+              td
+                = pattern.pretty_price
+      else
+        div.alert.alert-info
+          p No products found with the tag "#{tag}".
+          a(href="/tags") Browse all tags
+          |  or 
+          a(href="/products") view all products
+          | .
+    footer.container
+      span &copy; Doug &amp; Jane Finnie 2025

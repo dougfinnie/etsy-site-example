@@ -35,15 +35,17 @@ const axios = require("axios");
 const fs = require("fs");
 
 const etsyApiKey = process.env.ETSY_API_KEY;
+const etsyApiSecret = process.env.ETSY_API_SECRET;
 const etsyAccessToken = process.env.ETSY_ACCESS_TOKEN;
 const etsyShopId = process.env.ETSY_SHOP_ID;
 const shopName = process.env.SHOP_NAME;
 const cachePeriod = 1000 * 60 * 60 * 24 * 7; // 1 week
-const etsyApiBaseUrl = "https://api.etsy.com/v3/application";
+const etsyApiBaseUrl = "https://api.etsy.com/v3/application/";
 
 // Debug environment variables
 console.log('Environment check:');
 console.log('ETSY_API_KEY:', etsyApiKey ? '✓' : '✗ MISSING');
+console.log('ETSY_API_SECRET:', etsyApiSecret ? '✓' : '✗ MISSING');
 console.log('ETSY_ACCESS_TOKEN:', etsyAccessToken ? '✓' : '✗ MISSING');
 console.log('ETSY_SHOP_ID:', etsyShopId ? '✓' : '✗ MISSING');
 console.log('SHOP_NAME:', shopName ? '✓' : '✗ MISSING');
@@ -90,8 +92,28 @@ fastify.get("/", async (req, reply) => {
   });
 });
 
-fastify.get("/product/:listing_id", async (req, reply) => {
-  const product = await getProduct(req.params.listing_id);
+fastify.get("/product/:identifier", async (req, reply) => {
+  const identifier = req.params.identifier;
+  let listingId = identifier;
+  
+  // If identifier is not numeric, try to find the listing ID by handle
+  if (isNaN(identifier)) {
+    // Load products from cache to find the listing ID by handle
+    if (fileExists(productsPath)) {
+      const productsData = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+      const products = productsData.results || [];
+      const product = products.find(p => p.handle === identifier);
+      if (product) {
+        listingId = product.id;
+      } else {
+        return reply.code(404).send('Product not found');
+      }
+    } else {
+      return reply.code(404).send('Product not found');
+    }
+  }
+  
+  const product = await getProduct(listingId);
   if (!product) {
     return reply.code(404).send('Product not found');
   }
@@ -122,6 +144,71 @@ fastify.get("/products", async (req, reply) => {
   });
 });
 
+fastify.get("/tags/:tag", async (req, reply) => {
+  const tag = decodeURIComponent(req.params.tag);
+  
+  let productsData;
+  if (!fileExists(productsPath) || hasFileCacheExpired(productsPath)) {
+    console.log("Product cache expired, fetching from Etsy...");
+    productsData = await fetchProducts();
+    await saveJson(productsPath, productsData);
+  } else {
+    productsData = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+  }
+
+  const products = productsData.results || [];
+  
+  // Filter products by tag (case-insensitive)
+  const filteredProducts = products.filter(product => 
+    product.tags && product.tags.some(productTag => 
+      productTag.toLowerCase() === tag.toLowerCase()
+    )
+  );
+  
+  let sorted = filteredProducts.sort((a, b) =>
+    a.title.localeCompare(b.title, undefined, { sensitivity: "base" })
+  );
+
+  return reply.viewAsync("tag-products.pug", {
+    patterns: sorted,
+    tag: tag,
+    title: shopName + " - " + tag.charAt(0).toUpperCase() + tag.slice(1),
+  });
+});
+
+fastify.get("/tags", async (req, reply) => {
+  let productsData;
+  if (!fileExists(productsPath) || hasFileCacheExpired(productsPath)) {
+    console.log("Product cache expired, fetching from Etsy...");
+    productsData = await fetchProducts();
+    await saveJson(productsPath, productsData);
+  } else {
+    productsData = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+  }
+
+  const products = productsData.results || [];
+  
+  // Collect all unique tags with product counts
+  const tagCounts = {};
+  products.forEach(product => {
+    if (product.tags) {
+      product.tags.forEach(tag => {
+        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+      });
+    }
+  });
+  
+  // Sort tags by count (most popular first)
+  const sortedTags = Object.entries(tagCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([tag, count]) => ({ tag, count }));
+
+  return reply.viewAsync("tags.pug", {
+    tags: sortedTags,
+    title: shopName + " - Browse by Tags",
+  });
+});
+
 fastify.get("/api/refresh-products", async (req, reply) => {
   const json = await fetchProducts();
   await saveJson(productsPath, json);
@@ -147,12 +234,12 @@ async function getProduct(listingId) {
   
   try {
     // Get listing details
-    const listingResponse = await etsyFetch(`/listings/${listingId}`, {
+    const listingResponse = await etsyFetch(`listings/${listingId}`, {
       includes: 'Images,Shop,User,Translations'
     });
     
     // Get listing inventory (for pricing and variants)
-    const inventoryResponse = await etsyFetch(`/listings/${listingId}/inventory`);
+    const inventoryResponse = await etsyFetch(`listings/${listingId}/inventory`);
     
     const listing = listingResponse;
     const inventory = inventoryResponse.results || [];
@@ -162,6 +249,7 @@ async function getProduct(listingId) {
       id: listing.listing_id,
       title: listing.title,
       handle: listing.url ? listing.url.split('/').pop() : listing.listing_id.toString(),
+      etsyUrl: listing.url || `https://www.etsy.com/listing/${listing.listing_id}`,
       description: listing.description,
       descriptionHtml: listing.description,
       productType: listing.taxonomy_path ? listing.taxonomy_path.join(' > ') : '',
@@ -182,7 +270,7 @@ async function getProduct(listingId) {
           currencyCode: listing.price ? listing.price.currency_code : 'USD'
         }
       },
-      images: (listing.Images || []).map(img => ({
+      images: (listing.images || []).map(img => ({
         id: img.listing_image_id,
         url: img.url_fullxfull,
         altText: img.alt_text || listing.title,
@@ -213,7 +301,7 @@ async function getProduct(listingId) {
 
 async function getShop() {
   try {
-    const shopResponse = await etsyFetch(`/shops/${etsyShopId}`);
+    const shopResponse = await etsyFetch(`shops/${etsyShopId}`);
     
     // Transform Etsy shop to match expected structure
     const shop = {
@@ -249,7 +337,7 @@ async function getShop() {
 
 async function fetchProducts() {
   try {
-    const listingsResponse = await etsyFetch(`/shops/${etsyShopId}/listings`, {
+    const listingsResponse = await etsyFetch(`shops/${etsyShopId}/listings`, {
       state: 'active',
       limit: 100,
       includes: 'Images'
@@ -259,7 +347,7 @@ async function fetchProducts() {
     
     // Transform Etsy listings to match expected structure
     const products = listings.map(listing => {
-      const image = listing.Images && listing.Images[0];
+      const image = listing.images && listing.images[0];
       const price = listing.price ? (listing.price.amount / listing.price.divisor) : 0;
       const currencyCode = listing.price ? listing.price.currency_code : 'USD';
       
@@ -267,6 +355,7 @@ async function fetchProducts() {
         id: listing.listing_id,
         title: listing.title,
         handle: listing.url ? listing.url.split('/').pop() : listing.listing_id.toString(),
+        etsyUrl: listing.url || `https://www.etsy.com/listing/${listing.listing_id}`,
         description: listing.description,
         productType: listing.taxonomy_path ? listing.taxonomy_path.join(' > ') : '',
         tags: listing.tags || [],
@@ -317,7 +406,7 @@ async function etsyFetch(endpoint, params = {}) {
     throw new Error('ETSY_API_KEY environment variable is required');
   }
   if (!etsyAccessToken) {
-    throw new Error('ETSY_ACCESS_TOKEN environment variable is required');
+    throw new Error('ETSY_ACCESS_TOKEN environment variable is required. You need to complete OAuth 2.0 flow first.');
   }
 
   // Build URL with query parameters
@@ -348,6 +437,15 @@ async function etsyFetch(endpoint, params = {}) {
     console.error('Response data:', error.response?.data);
     console.error('Request URL:', url.toString());
     console.error('Error message:', error.message);
+    
+    // If this is an authentication error, provide helpful guidance
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      console.error('\n=== AUTHENTICATION ISSUE ===');
+      console.error('Your OAuth access token may be invalid or expired.');
+      console.error('You need to complete the OAuth 2.0 flow to get a valid access token.');
+      console.error('See: https://developers.etsy.com/documentation/essentials/authentication');
+    }
+    
     throw error;
   }
 }

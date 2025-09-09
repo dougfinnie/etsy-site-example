@@ -5,9 +5,20 @@ mixin pattern(product)
         h2.card-header
           = product.title
         div#latest.card-body
-          if product.images && product.images.edges && product.images.edges.length > 0
-            each image in product.images.edges
-              img.img-fluid(src=image.node.url, alt=image.node.altText, style="max-width: 100%; margin-bottom: 10px;")
+          if product.images && product.images.length > 0
+            // Main image
+            div.mb-3
+              img#mainImage.img-fluid(src=product.images[0].url, alt=product.images[0].altText, style="max-width: 100%; cursor: pointer;")
+            // Thumbnail gallery
+            if product.images.length > 1
+              div.d-flex.flex-wrap.gap-2
+                each image, index in product.images
+                  img.thumbnail-img(
+                    src=image.url, 
+                    alt=image.altText, 
+                    style=`width: 80px; height: 80px; object-fit: cover; cursor: pointer; border: 2px solid ${index === 0 ? '#007bff' : 'transparent'};`
+                    onclick=`document.getElementById('mainImage').src='${image.url}'; document.querySelectorAll('.thumbnail-img').forEach(img => img.style.border='2px solid transparent'); this.style.border='2px solid #007bff';`
+                  )
           else if product.square_thumbnail_url
             img.img-fluid(src=product.square_thumbnail_url, alt=product.title)
           br
@@ -18,6 +29,18 @@ mixin pattern(product)
           else
             p No description available
     div.col-md-4.mt-5
+      if product.etsyUrl
+        div.card.mb-3
+          div.card-body.text-center
+            a.btn.btn-primary.btn-lg(
+              href=product.etsyUrl,
+              target="_blank",
+              rel="noopener noreferrer",
+              style="width: 100%;"
+            )
+              i.fas.fa-shopping-cart.me-2
+              | Buy on Etsy
+            small.text-muted.d-block.mt-2 Opens in new window
       div.card
         div#latest.card-body
           div
@@ -38,7 +61,12 @@ mixin pattern(product)
                 strong Tags:
                 br
                 each tag in product.tags
-                  span.badge.rounded-pill.bg-secondary.me-1
+                  a.badge.rounded-pill.bg-secondary.me-1.text-decoration-none(
+                    href=`/tags/${encodeURIComponent(tag)}`,
+                    style="color: white;"
+                    onmouseover="this.style.backgroundColor='#495057'"
+                    onmouseout="this.style.backgroundColor='#6c757d'"
+                  )
                     = tag
             if product.priceRange
               p
@@ -48,23 +76,28 @@ mixin pattern(product)
               p.text-success Available for Sale
             else
               p.text-danger Out of Stock
+            if product.etsyUrl
+              p
+                strong Buy this pattern: 
+                a(href=product.etsyUrl, target="_blank", rel="noopener noreferrer")
+                  | View on Etsy ↗
               
-      if product.variants && product.variants.edges && product.variants.edges.length > 0
+      if product.variants && product.variants.length > 0
         div.card
           h2.card-header
               = "Variants"
           div#variants.card-body
             div
-              each variant in product.variants.edges
+              each variant in product.variants
                 div.mb-2
                   p
-                    strong= variant.node.title
-                    if variant.node.sku
+                    strong= variant.title
+                    if variant.sku
                       br
-                      small.text-muted SKU: #{variant.node.sku}
+                      small.text-muted SKU: #{variant.sku}
                     br
-                    = variant.node.price.currencyCode + " " + variant.node.price.amount
-                    if variant.node.availableForSale
+                    = variant.price.currencyCode + " " + variant.price.amount
+                    if variant.availableForSale
                       span.badge.bg-success.ms-2 Available
                     else
                       span.badge.bg-danger.ms-2 Out of Stock
