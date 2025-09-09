@@ -33,6 +33,7 @@ fastify.addHook("onSend", async function (request, reply) {
 // app.use(bodyParser.urlencoded({ extended: true }));
 const axios = require("axios");
 const fs = require("fs");
+const reviews = require("./utils/reviews");
 
 const etsyApiKey = process.env.ETSY_API_KEY;
 const etsyApiSecret = process.env.ETSY_API_SECRET;
@@ -117,6 +118,16 @@ fastify.get("/product/:identifier", async (req, reply) => {
   if (!product) {
     return reply.code(404).send('Product not found');
   }
+  
+  // Optionally add reviews data (currently returns empty due to API limitations)
+  try {
+    const reviewsData = await reviews.fetchReviewsForListing(listingId);
+    product.reviews = reviewsData;
+  } catch (error) {
+    console.log(`Could not fetch reviews for listing ${listingId}:`, error.message);
+    product.reviews = null;
+  }
+  
   return reply.viewAsync("pattern.pug", {
     pattern: product, // keeping 'pattern' name for template compatibility
     title: shopName + " - " + product.title,
@@ -219,6 +230,37 @@ fastify.get("/api/refresh-shop", async (req, reply) => {
   const shop = await getShop();
   await saveJson(shopPath, shop);
   return reply.send("ok");
+});
+
+fastify.get("/api/reviews/:listingId", async (req, reply) => {
+  const listingId = req.params.listingId;
+  try {
+    const reviewsData = await reviews.fetchReviewsForListing(listingId);
+    return reply.send(reviewsData);
+  } catch (error) {
+    console.error(`Error fetching reviews for listing ${listingId}:`, error);
+    return reply.code(500).send({ error: 'Failed to fetch reviews', message: error.message });
+  }
+});
+
+fastify.get("/api/reviews", async (req, reply) => {
+  try {
+    const allReviews = await reviews.fetchAllProductReviews();
+    return reply.send(allReviews);
+  } catch (error) {
+    console.error('Error fetching all reviews:', error);
+    return reply.code(500).send({ error: 'Failed to fetch reviews', message: error.message });
+  }
+});
+
+fastify.get("/api/reviews-summary", async (req, reply) => {
+  try {
+    const summary = await reviews.getReviewsSummary();
+    return reply.send(summary);
+  } catch (error) {
+    console.error('Error fetching reviews summary:', error);
+    return reply.code(500).send({ error: 'Failed to fetch reviews summary', message: error.message });
+  }
 });
 
 async function getProduct(listingId) {

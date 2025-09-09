@@ -101,3 +101,62 @@ mixin pattern(product)
                       span.badge.bg-success.ms-2 Available
                     else
                       span.badge.bg-danger.ms-2 Out of Stock
+
+      if product.reviews && product.reviews.totalReviews > 0
+        div.card.mt-3
+          h2.card-header
+            i.fas.fa-star.text-warning.me-2
+            = "Customer Reviews"
+            span.badge.bg-primary.ms-2= product.reviews.totalReviews
+          div.card-body
+            div.row.mb-3
+              div.col-md-6
+                div.d-flex.align-items-center.mb-2
+                  div.me-3
+                    span.h4.mb-0= product.reviews.averageRating.toFixed(1)
+                    small.text-muted /5.0
+                  div
+                    - for (let i = 1; i <= 5; i++)
+                      if i <= Math.floor(product.reviews.averageRating)
+                        i.fas.fa-star.text-warning
+                      else if i - 0.5 <= product.reviews.averageRating
+                        i.fas.fa-star-half-alt.text-warning
+                      else
+                        i.far.fa-star.text-muted
+              div.col-md-6
+                small.text-muted Based on #{product.reviews.totalReviews} review#{product.reviews.totalReviews === 1 ? '' : 's'}
+                
+            // Rating breakdown
+            div.mb-3
+              each count, rating in product.reviews.summary
+                - var percentage = product.reviews.totalReviews > 0 ? (count / product.reviews.totalReviews * 100) : 0
+                div.row.align-items-center.mb-1
+                  div.col-2
+                    small #{rating} stars
+                  div.col-8
+                    div.progress(style="height: 6px;")
+                      div.progress-bar.bg-warning(style=`width: ${percentage}%`)
+                  div.col-2.text-end
+                    small.text-muted= count
+            
+            // Recent reviews
+            if product.reviews.reviews && product.reviews.reviews.length > 0
+              hr
+              h6 Recent Reviews:
+              div.reviews-list(style="max-height: 400px; overflow-y: auto;")
+                each review, index in product.reviews.reviews.slice(0, 5)
+                  div.border-bottom.pb-2.mb-2
+                    div.d-flex.justify-content-between.align-items-start.mb-1
+                      div
+                        - for (let i = 1; i <= 5; i++)
+                          if i <= review.rating
+                            i.fas.fa-star.text-warning.small
+                          else
+                            i.far.fa-star.text-muted.small
+                        span.ms-2.small.text-muted by #{review.buyerDisplayName}
+                      if review.reviewDate
+                        small.text-muted= new Date(review.reviewDate).toLocaleDateString()
+                    if review.review
+                      p.mb-0.small= review.review
+                    if review.translatedReview && review.translatedReview !== review.review
+                      p.mb-0.small.text-muted.fst-italic Translated: #{review.translatedReview}
