@@ -23,9 +23,9 @@ mixin pattern(product)
             img.img-fluid(src=product.square_thumbnail_url, alt=product.title)
           br
           if product.descriptionHtml
-            != product.descriptionHtml
+            != product.descriptionHtml.replace(/\n/g, '<br>')
           else if product.description
-            p= product.description
+            p!= product.description.replace(/\n/g, '<br>')
           else
             p No description available
     div.col-md-4.mt-5
@@ -128,7 +128,9 @@ mixin pattern(product)
                 
             // Rating breakdown
             div.mb-3
-              each count, rating in product.reviews.summary
+              - var ratings = Object.keys(product.reviews.summary).sort((a, b) => b - a)
+              each rating in ratings
+                - var count = product.reviews.summary[rating]
                 - var percentage = product.reviews.totalReviews > 0 ? (count / product.reviews.totalReviews * 100) : 0
                 div.row.align-items-center.mb-1
                   div.col-2
