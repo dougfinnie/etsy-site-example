@@ -13,6 +13,13 @@ fastify.register(require("@fastify/static"), {
   prefix: "/", // optional: default '/'
 });
 
+// Setup static serving for assets from data folder
+fastify.register(require("@fastify/static"), {
+  root: path.join(__dirname, "data/assets"),
+  prefix: "/assets/",
+  decorateReply: false
+});
+
 // View is a templating manager for fastify
 fastify.register(require("@fastify/view"), {
   engine: {
@@ -261,6 +268,45 @@ fastify.get("/api/reviews-summary", async (req, reply) => {
     console.error('Error fetching reviews summary:', error);
     return reply.code(500).send({ error: 'Failed to fetch reviews summary', message: error.message });
   }
+});
+
+fastify.get("/auth/callback", async (req, reply) => {
+  const { code, state, error } = req.query;
+  
+  if (error) {
+    return reply.code(400).send(`
+      <h1>Authorization Error</h1>
+      <p>Error: ${error}</p>
+      <p>Please try the authorization process again.</p>
+    `);
+  }
+  
+  if (!code) {
+    return reply.code(400).send(`
+      <h1>Missing Authorization Code</h1>
+      <p>No authorization code received from Etsy.</p>
+    `);
+  }
+  
+  return reply.type('text/html').send(`
+    <h1>Authorization Code Received!</h1>
+    <p><strong>Authorization Code:</strong> <code>${code}</code></p>
+    ${state ? `<p><strong>State:</strong> <code>${state}</code></p>` : ''}
+    
+    <h2>Next Steps:</h2>
+    <ol>
+      <li>Copy the authorization code above</li>
+      <li>Run this command in your terminal:</li>
+    </ol>
+    
+    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+node exchange-token.js ${code} [CODE_VERIFIER_FROM_AUTH_HELPER]
+    </pre>
+    
+    <p><em>Replace [CODE_VERIFIER_FROM_AUTH_HELPER] with the code verifier that was displayed when you ran the auth-helper.js script.</em></p>
+    
+    <p>You can close this tab once you've copied the authorization code.</p>
+  `);
 });
 
 async function getProduct(listingId) {
